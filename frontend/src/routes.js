@@ -1,5 +1,10 @@
+const api = '/api/v1/';
+
 export default {
-    loginPath: () => 'login',
-    signupPath: () => 'signup',
+    loginApiPath: () => [api, 'login'].join('/'),
+    signupApiPath: () => [api, 'signup'].join('/'),
+
+    loginPagePath: () => '/login',
+    chatPagePath: () => '/',
   };
   

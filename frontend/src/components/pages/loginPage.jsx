@@ -4,11 +4,15 @@ import authImg from '../../assets/autImg.png';
 import { Formik, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 import * as Yup from 'yup';
-// import {toast} from 'react-toastify';
+import routes from '../../routes.js';
+import { useNavigate } from "react-router-dom";
+//import {toast} from 'react-toastify';
 
 export const LoginPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string().required(t('singUpPage.requiredField')),
@@ -31,12 +35,21 @@ export const LoginPage = () => {
               <Formik
                 initialValues={{ username: '', password: '' }}
                 validationSchema={SignupSchema}
-                onSubmit={(values) => {
-                  console.log(values);
+                onSubmit={(values, { setSubmitting }) => {
+                  axios.post(routes.loginApiPath(), values).then((response) => {
+                    // console.log(response.data);
+                    const token = response.data.token;
+                    localStorage.setItem('token', JSON.stringify(token));
+                    navigate(routes.chatPagePath());
+                  })
+                    .catch(() => {
+                      console.log('Error!');
+                    });
+                  setSubmitting(false);
                 }}
               >
-                {({ errors, touched }) => (
-                  <Form className="col-12 col-md-6 mt-3 mt-mb-0">
+                {({ touched, errors, handleSubmit }) => (
+                  <Form className="col-12 col-md-6 mt-3 mt-mb-0" onSubmit={handleSubmit}>
                     <h1 className="text-center mb-4">{t('singUpPage.login')}</h1>
                     <Form.Group className="form-floating mb-3">
                       <Field

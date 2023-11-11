@@ -1,13 +1,30 @@
-import React from 'react';
+import { React, useEffect, useContext } from 'react';
+import routes from '../../routes';
+import TokenContext from '../../contexts/tokenContext';
+import { useNavigate } from "react-router-dom";
 //import { useTranslation } from 'react-i18next';
 
-export const ChatPage = () => {
+function ChatPage() {
   //const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { token } = useContext(TokenContext);
+
+  useEffect(() => {
+    console.log(token);
+    if (!token) {
+      navigate(routes.loginPagePath());
+    }
+  })
+
   return (
-    <div>
-      <h1 className="center-align">
-        {"Здесь будет чат"}
-      </h1>
-    </div>
-  );
-};
+    <>
+      {token ? (<div>
+        <h1 className="center-align">
+          {"Здесь будет чат"}
+        </h1>
+      </div>) : null};
+    </>
+  )
+}
+
+export default ChatPage;

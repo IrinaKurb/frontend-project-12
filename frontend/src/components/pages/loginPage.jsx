@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import authImg from '../../assets/autImg.png';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
 import routes from '../../routes.js';
 import { useNavigate } from "react-router-dom";
+import TokenContext from '../../contexts/tokenContext';
 //import {toast} from 'react-toastify';
 
 export const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [ isValidForm, setValidStatus ] = useState(true);
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string().required(t('singUpPage.requiredField')),
@@ -20,7 +22,9 @@ export const LoginPage = () => {
   });
 
   return (
-    <div className="container-fluid h-100">
+    <TokenContext.Consumer>
+      {({updateToken}) => (
+        <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
         <div className="col-12 col-md-8 col-xxl-6">
           <div className="card shadow-sm">
@@ -40,24 +44,29 @@ export const LoginPage = () => {
                     // console.log(response.data);
                     const token = response.data.token;
                     localStorage.setItem('token', JSON.stringify(token));
+                    updateToken();
                     navigate(routes.chatPagePath());
                   })
                     .catch(() => {
-                      console.log('Error!');
+                      //console.log('Error!');
+                      setValidStatus(false);
                     });
                   setSubmitting(false);
                 }}
               >
-                {({ touched, errors, handleSubmit }) => (
+                {({ touched, errors, handleChange, handleSubmit, values }) => (
                   <Form className="col-12 col-md-6 mt-3 mt-mb-0" onSubmit={handleSubmit}>
                     <h1 className="text-center mb-4">{t('singUpPage.login')}</h1>
                     <Form.Group className="form-floating mb-3">
-                      <Field
+                      <Form.Control
                         name="username"
                         id="username"
                         autoComplete="username"
                         placeholder={t('singUpPage.username')}
                         className="form-control"
+                        value={values.username}
+                        onChange={handleChange}
+                        isInvalid={!isValidForm}
                         required
                       />
                       {errors.username && touched.username ? (
@@ -67,12 +76,15 @@ export const LoginPage = () => {
                     </Form.Group>
 
                     <Form.Group className="form-floating mb-4">
-                      <Field
+                      <Form.Control
                         name="password"
                         id="password"
                         autoComplete="password"
                         placeholder={t('singUpPage.password')}
                         className="form-control"
+                        value={values.password}
+                        onChange={handleChange}
+                        isInvalid={!isValidForm}
                         required
                       />
                       {errors.password && touched.password ? (
@@ -84,6 +96,7 @@ export const LoginPage = () => {
                     <Button type="submit" variant="outline-primary" className="w-100 mb-3">
                       {t('singUpPage.login')}
                     </Button>
+                    {!isValidForm ? (<Alert variant={'danger'}>{t('singUpPage.wrongCredentials')}</Alert>) : null }
                   </Form>
                 )}
               </Formik>
@@ -99,5 +112,7 @@ export const LoginPage = () => {
         </div>
       </div>
     </div >
+      )}
+    </TokenContext.Consumer>
   );
 };

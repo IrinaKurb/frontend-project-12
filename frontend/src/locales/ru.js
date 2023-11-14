@@ -12,6 +12,16 @@ export default {
                 signup: 'Регистрация',
                 networkError: 'Ошибка соединения',
             },
+            chatPage: {
+                channels: "Каналы",
+                message_one: "{{count}} сообщение",
+                message_others: "{{count}} сообщения",
+                inputMessage: "Введите сообщение...",
+                exit: "Выйти",
+                chatName: "Мой секретный чат",
+                delete: "Удалить",
+                rename: "Переименовать",
+            }
         },
     }
 }

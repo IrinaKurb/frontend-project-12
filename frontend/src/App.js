@@ -8,6 +8,8 @@ import routes from './routes.js';
 import init from './init.js';
 import TokenContext from './contexts/tokenContext.jsx';
 
+import Navbar from './components/elements/navigationPannel.jsx';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -15,27 +17,30 @@ class App extends React.Component {
 
     this.updateToken = () => {
       this.setState(() => ({
-          token: JSON.parse(localStorage.getItem('token'))
+        token: JSON.parse(localStorage.getItem('token'))
       }));
     };
 
     this.state = {
-      token:  JSON.parse(localStorage.getItem('token')),
+      token: JSON.parse(localStorage.getItem('token')),
       updateToken: this.updateToken,
     };
   }
 
   render() {
-    return(
-    <TokenContext.Provider value={this.state}>
-      <BrowserRouter>
-        <Routes>
-          <Route path={routes.chatPagePath()} element={<ChatPage/>} />
-          <Route path={routes.loginPagePath()} element={<LoginPage />} />
-          <Route path='*' element={<NotFoundPage />} />
-        </Routes>
-      </BrowserRouter>
-    </TokenContext.Provider>
+    return (
+      <TokenContext.Provider value={this.state}>
+        <BrowserRouter>
+          <div className="d-flex flex-column h-100">
+            <Navbar />
+            <Routes >
+              <Route path={routes.chatPagePath()} element={<ChatPage />} />
+              <Route path={routes.loginPagePath()} element={<LoginPage />} />
+              <Route path='*' element={<NotFoundPage />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </TokenContext.Provider>
     )
   }
 }

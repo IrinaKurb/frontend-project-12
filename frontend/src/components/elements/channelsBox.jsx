@@ -1,40 +1,50 @@
 import React from 'react';
-//import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 // import { animateScroll } from 'react-scroll';
 
-const Channel = ({channel}) => {
-    console.log(channel)
-    const { t } = useTranslation();
+const Channel = ({ channelName, isRemovable, isCurrent }) => {
 
+    const { t } = useTranslation();
+    const isChoosenBtn = isCurrent ? 'secondary' : null;
     return (
         <li className="nav-item w-100">
             <Dropdown as={ButtonGroup} className="d-flex">
                 <Button
                     type="button"
-                    className="w-100 rounded-0 text-start text-truncate"
+                    className="w-100 rounded-0 text-start text-truncate btn"
+                    variant={isChoosenBtn}
                     onClick={() => console.log('Choose!')}
                 >
                     <span className="me-1">#</span>
-                    {channel}
+                    {channelName}
                 </Button>
-                <Dropdown.Toggle split className="flex-grow-0">
-                    <span className="visually-hidden">{'Channel menu'}</span>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => console.log('Delete!')}>{t('chatPage.delete')}</Dropdown.Item>
-                    <Dropdown.Item onClick={() => console.log('Reneme!')}>{t('chatPage.rename')}</Dropdown.Item>
-                </Dropdown.Menu>
+                {isRemovable ? (
+                    <>
+                        <Dropdown.Toggle split className="flex-grow-0">
+                            <span className="visually-hidden">{'Channel menu'}</span>
+                        </Dropdown.Toggle>
+
+                        < Dropdown.Menu >
+                            <Dropdown.Item onClick={() => console.log('Delete!')}>{t('chatPage.delete')}</Dropdown.Item>
+                            <Dropdown.Item onClick={() => console.log('Reneme!')}>{t('chatPage.rename')}</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </>)
+                    : (
+                        null
+                    )
+                }
             </Dropdown>
-        </li>
+        </li >
     );
 };
 
 const ChannelsBox = () => {
     const { t } = useTranslation();
-    const channels = ['general', 'random', 'myChannel'];
+    const channels = useSelector((state) => state.channels.channels);
+    //console.log('!!!!!!!!!!!! channels: ' + JSON.stringify(channels));
 
     return (
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -55,8 +65,10 @@ const ChannelsBox = () => {
             >
                 {channels.map((channel) => (
                     <Channel
-                        channel={channel}
-                        key={channel}
+                        channelName={channel.name}
+                        key={channel.id}
+                        isRemovable={channel.removable}
+                        isCurrent={channel.isCurrent}
                         handleChoose={() => console.log('Choose Chanel!')}
                         handleRemove={() => console.log('Delete Chanel!')}
                         handleRename={() => console.log('Rename Chanel!')}

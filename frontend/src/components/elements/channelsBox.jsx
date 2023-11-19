@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 // import { animateScroll } from 'react-scroll';
 
 const Channel = ({ channelName, isRemovable, isCurrent }) => {
+    // console.log(isCurrent);
 
     const { t } = useTranslation();
     const isChoosenBtn = isCurrent ? 'secondary' : null;
@@ -44,7 +45,9 @@ const Channel = ({ channelName, isRemovable, isCurrent }) => {
 const ChannelsBox = () => {
     const { t } = useTranslation();
     const channels = useSelector((state) => state.channels.channels);
-    //console.log('!!!!!!!!!!!! channels: ' + JSON.stringify(channels));
+    const currentChannel = useSelector((state) => state.channels.currentChannelId);
+    // console.log(currentChannel)
+    // console.log('!!!!!!!!!!!! channels: ' + JSON.stringify(channels));
 
     return (
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -68,7 +71,7 @@ const ChannelsBox = () => {
                         channelName={channel.name}
                         key={channel.id}
                         isRemovable={channel.removable}
-                        isCurrent={channel.isCurrent}
+                        isCurrent={channel.id === currentChannel}
                         handleChoose={() => console.log('Choose Chanel!')}
                         handleRemove={() => console.log('Delete Chanel!')}
                         handleRename={() => console.log('Rename Chanel!')}

@@ -2,42 +2,25 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     channels: [],
+    currentChannelId: 1,
 }
 
 const channelSlice = createSlice({
     name: 'channel',
     initialState,
     reducers: {
-        addChannel(state, action) {
-            console.log('add channel!');
-            //console.log(state.channels);
-            const newChannels = action.payload;
-            const channels = newChannels.map((channel, id) => (
-                id === 0 ? 
-                {
-                    ...channel,
-                    isCurrent: true,
-                } :
-                {
-                    ...channel,
-                    isCurrent: false,
-                }
-            ))
-            state.channels.push(...channels)
+        addChannelsFromStore(state, action) {
+            console.log('add channel from Store!');
+            const channelsFromStore = action.payload;
+            state.channels.push(...channelsFromStore);
         },
-        // 'набор методов (например, добавить удалить)'
-        /* addMessage(state, action) {
-            state.channels.push({
-                id: ...,
-                text: action.payload.text,
-                ...
-            })
-        },
-        */
+        setCurrentChannelId(state, action) {
+            const currentChannelId = action.payload;
+            state.currentChannelId = currentChannelId;
+          }, 
     },
 });
 
-export const { addChannel } = channelSlice.actions; // достали action
+export const { addChannelsFromStore, setCurrentChannelId } = channelSlice.actions; // достали action
 
-export default channelSlice.reducer; // экспорт редьюсеров, которые и должны юыть подключены в стор
-
+export default channelSlice.reducer; // экспорт редьюсеров, которые и должны быть подключены в стор

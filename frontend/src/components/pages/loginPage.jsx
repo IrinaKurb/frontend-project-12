@@ -41,9 +41,11 @@ export const LoginPage = () => {
                 validationSchema={SignupSchema}
                 onSubmit={(values, { setSubmitting }) => {
                   axios.post(routes.loginApiPath(), values).then((response) => {
-                    // console.log(response.data);
+                    console.log(response.data);
                     const token = response.data.token;
+                    const userName = response.data.username;
                     localStorage.setItem('token', JSON.stringify(token));
+                    localStorage.setItem('userName', JSON.stringify(userName));
                     updateToken();
                     navigate(routes.chatPagePath());
                   })

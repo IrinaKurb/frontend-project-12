@@ -7,8 +7,8 @@ import ChannelsBox from '../elements/channelsBox';
 import ChatBox from '../elements/chatBox';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { addChannel } from '../../store/channelSlice';
-import { addMessage } from '../../store/messageSlice';
+import { addChannelsFromStore, setCurrentChannelId } from '../../store/channelSlice';
+import { addMessagesFromStore } from '../../store/messageSlice';
 
 function ChatPage() {
   //const { t } = useTranslation();
@@ -18,27 +18,31 @@ function ChatPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
-      axios.get(routes.dataApiPath(), {
+    const requestData = async () => {
+      const response = await axios.get(routes.dataApiPath(), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }).then((response) => {
-        const channels = response.data.channels;
-        const messages = [
-          {userName: 'a', body:'1111'},
-          {userName: 'b', body:'2222'},
-      ];
-        console.log(messages);
-        dispatch(addChannel(channels));
-        dispatch(addMessage(messages));
       });
+      
+      /*axios.post('/api/v1/signup', { username: 'newuser', password: '123456' }).then((response) => {
+        console.log(response.data); // => { token: ..., username: 'newuser' }
+      });*/
+
+      const { channels,  messages, currentChannelId } = response.data;
+      dispatch(addChannelsFromStore(channels));
+      dispatch(setCurrentChannelId(currentChannelId));
+      dispatch(addMessagesFromStore(messages));
+    };
+    
+    if (token) {
+      requestData();
     } else {
       navigate(routes.loginPagePath());
     }
   }, []);
 
-  return (
+   return (
     <>
       {token ? (
         <div className="container h-100 my-4 overflow-hidden rounded shadow">

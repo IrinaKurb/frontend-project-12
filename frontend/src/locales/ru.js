@@ -21,6 +21,11 @@ export default {
                 chatName: "Мой секретный чат",
                 delete: "Удалить",
                 rename: "Переименовать",
+                messagesForUser: {
+                    connected: "Связь с сервером установлена",
+                    disconnected: "Связь с сервером потеряна",
+                    messageNotSend: 'Сообщение не отправлено!',
+                },
             }
         },
     }

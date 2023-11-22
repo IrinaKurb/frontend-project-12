@@ -1,16 +1,35 @@
 import { io } from 'socket.io-client';
 import store from './store/index.js';
 import { addMessage } from './store/messageSlice.js';
-
-
-const socket = io('http://localhost:3000');
-console.log('create socket');
+import { toast } from "react-toastify";
 
 const { dispatch } = store;
 
-socket.on('newMessage', (newMessage) => {
-    console.log("messageForSending: " + JSON.stringify(newMessage));
-    dispatch(addMessage(newMessage));
-});
+const initSocket = (i18n) => {
+    const socket = io('http://localhost:3000');
+    const { t } = i18n();
+    console.log('create socket');
 
-export default socket;
+    socket.on('connect', () => {
+        toast.success(t('chatPage.messagesForUser.connected'), {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    });
+
+    socket.on('disconnect', () => {
+        toast.error(t('chatPage.messagesForUser.disconnected'), {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    });
+
+    socket.on('newMessage', (newMessage) => {
+        console.log("messageForSending: " + JSON.stringify(newMessage));
+        dispatch(addMessage(newMessage));
+    });
+
+    
+
+    return socket;
+};
+
+export default initSocket;

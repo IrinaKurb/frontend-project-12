@@ -5,18 +5,17 @@ import { NotFoundPage } from './components/pages/pageNotFound.jsx';
 import { LoginPage } from './components/pages/loginPage.jsx';
 import ChatPage from './components/pages/chatPage.jsx';
 import routes from './routes.js';
-import init from './init.js';
 import TokenContext from './contexts/tokenContext.jsx';
 import { Provider } from 'react-redux';
 import store from './store/index.js';
+import initI18next from './init18next';
 
 import Navbar from './components/elements/navigationPannel.jsx';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    init;
-
+    initI18next();
     this.updateToken = () => {
       this.setState(() => ({
         token: JSON.parse(localStorage.getItem('token'))

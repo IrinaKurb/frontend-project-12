@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { addChannelsFromStore, setCurrentChannelId } from '../../store/channelSlice';
 import { addMessagesFromStore } from '../../store/messageSlice';
 
-function ChatPage() {
+const ChatPage = () => {
   //const { t } = useTranslation();
   const navigate = useNavigate();
   const { token } = useContext(TokenContext);

@@ -1,4 +1,4 @@
-import { React, useEffect, useContext } from 'react';
+import { React, useEffect, useContext, useState } from 'react';
 import routes from '../../routes';
 import TokenContext from '../../contexts/tokenContext';
 import { useNavigate } from "react-router-dom";
@@ -7,34 +7,41 @@ import ChannelsBox from '../elements/channelsBox';
 import ChatBox from '../elements/chatBox';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { addChannelsFromStore, setCurrentChannelId } from '../../store/channelSlice';
-import { addMessagesFromStore } from '../../store/messageSlice';
+import { addInitialChannel, setCurrentChannelId } from '../../store/channelSlice';
+import { addInitialMessages } from '../../store/messageSlice';
+//import ModalWindow from '../elements/modalWindows';
+import { AddNewChannelModal } from '../elements/modalWindows';
 
 const ChatPage = () => {
   //const { t } = useTranslation();
   const navigate = useNavigate();
   const { token } = useContext(TokenContext);
+  const [isLoad, setLoad] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("рендерится ChatPage");
     const requestData = async () => {
       const response = await axios.get(routes.dataApiPath(), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      
-      /*axios.post('/api/v1/signup', { username: 'newuser', password: '123456' }).then((response) => {
+/*
+      axios.post('/api/v1/signup', { username: 'murzik1', password: '123456' }).then((response) => {
         console.log(response.data); // => { token: ..., username: 'newuser' }
-      });*/
+      });
+  */
 
-      const { channels,  messages, currentChannelId } = response.data;
-      dispatch(addChannelsFromStore(channels));
+      setLoad(true);
+      console.log(response);
+      const { channels, messages, currentChannelId } = response.data;
+      dispatch(addInitialChannel(channels));
       dispatch(setCurrentChannelId(currentChannelId));
-      dispatch(addMessagesFromStore(messages));
+      dispatch(addInitialMessages(messages));
     };
-    
+
     if (token) {
       requestData();
     } else {
@@ -42,9 +49,11 @@ const ChatPage = () => {
     }
   }, []);
 
-   return (
+  return isLoad ? (
     <>
       {token ? (
+        <>
+        <AddNewChannelModal />
         <div className="container h-100 my-4 overflow-hidden rounded shadow">
           <div className="row h-100 bg-white flex-md-row">
             <ChannelsBox />
@@ -53,10 +62,11 @@ const ChatPage = () => {
             </div>
           </div>
         </div>
+        </>
       )
         : null};
     </>
-  )
+  ) : null
 }
 
 export default ChatPage;

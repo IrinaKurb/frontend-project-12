@@ -1,15 +1,27 @@
-import React from 'react';
+import { React } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
+//import { getCurrentChannel } from '../../selectors';
+import { useDispatch } from 'react-redux';
+import { setCurrentChannelId } from '../../store/channelSlice';
+import { openModalWindow } from '../../store/modalSlice';
 // import { animateScroll } from 'react-scroll';
 
-const Channel = ({ channelName, isRemovable, isCurrent }) => {
-    // console.log(isCurrent);
-
+const Channel = ({ channelName, id, isRemovable, isCurrent }) => {
+    //console.log(channelName, key, id, isRemovable, isCurrent);
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const isChoosenBtn = isCurrent ? 'secondary' : null;
+
+    const chooseActiveChannel = () => {
+        //console.log('Choose! ' + channelName + id);
+        dispatch(setCurrentChannelId(id));
+    };
+
+    //console.log(useSelector(state => state))
+
     return (
         <li className="nav-item w-100">
             <Dropdown as={ButtonGroup} className="d-flex">
@@ -17,14 +29,14 @@ const Channel = ({ channelName, isRemovable, isCurrent }) => {
                     type="button"
                     className="w-100 rounded-0 text-start text-truncate btn"
                     variant={isChoosenBtn}
-                    onClick={() => console.log('Choose!')}
+                    onClick={chooseActiveChannel}
                 >
                     <span className="me-1">#</span>
                     {channelName}
                 </Button>
                 {isRemovable ? (
                     <>
-                        <Dropdown.Toggle split className="flex-grow-0">
+                        <Dropdown.Toggle split className="flex-grow-0" variant={isChoosenBtn}>
                             <span className="visually-hidden">{'Channel menu'}</span>
                         </Dropdown.Toggle>
 
@@ -44,10 +56,13 @@ const Channel = ({ channelName, isRemovable, isCurrent }) => {
 
 const ChannelsBox = () => {
     const { t } = useTranslation();
-    const channels = useSelector((state) => state.channels.channels);
-    const currentChannel = useSelector((state) => state.channels.currentChannelId);
-    // console.log(currentChannel)
-    // console.log('!!!!!!!!!!!! channels: ' + JSON.stringify(channels));
+    const dispatch = useDispatch();
+    const {channels, currentChannelId} = useSelector((state) => state.channelsStore);
+
+    const addNewChannel = () => {
+        console.log('add New Channel! Press buttom "+"');
+        dispatch(openModalWindow({ modalType: 'addChannel' }));
+    };
 
     return (
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -57,6 +72,7 @@ const ChannelsBox = () => {
                     type="button"
                     variant="group-vertical"
                     className="p-0 text-primary"
+                    onClick={addNewChannel}
                 >
                     <PlusSquare size={20} />
                     <span className="visually-hidden">+</span>
@@ -70,9 +86,9 @@ const ChannelsBox = () => {
                     <Channel
                         channelName={channel.name}
                         key={channel.id}
+                        id={channel.id}
                         isRemovable={channel.removable}
-                        isCurrent={channel.id === currentChannel}
-                        handleChoose={() => console.log('Choose Chanel!')}
+                        isCurrent={channel.id === currentChannelId}
                         handleRemove={() => console.log('Delete Chanel!')}
                         handleRename={() => console.log('Rename Chanel!')}
                     />

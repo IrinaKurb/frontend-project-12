@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useEffect } from 'react';
 import SocketContext from '../../contexts/socketContext';
 import { Formik, Field } from 'formik';
 import { Form, InputGroup, Button } from 'react-bootstrap';
@@ -15,10 +15,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const NewMessageForm = () => {
   const { t } = useTranslation();
   const socket = useContext(SocketContext);
-  console.log(socket)
   const formikRef = useRef(null);
   const currentUser = JSON.parse(localStorage.getItem('userName'));
-  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
+  const currentChannelId = useSelector((state) => state.channelsStore.currentChannelId);
   let isDisabled = false;
   // console.log(currentUser);
   // const rollbar = useRollbar();
@@ -29,26 +28,31 @@ const NewMessageForm = () => {
     });
   };
 
+  useEffect(() => {
+    console.log("рендер newMessageForm");
+}, []);
+
   return (
     <Formik
       initialValues={{ body: '' }}
       onSubmit={(values, { setSubmitting, resetForm }) => {
 
-        socket.timeout(5000).emit('newMessage', { body: values.body, channelId: currentChannelId, username: currentUser }, (err, response) => {
-          console.log("invoke check");
-          if (err) {
-            console.log("can't find server");
-            isDisabled = true;
-            resetForm();
-            notSendMessage();
-          } else {
-            console.log('conection with the server is ' + response.status);
-            isDisabled = '';
-            setSubmitting(false);
-            resetForm();
-            formikRef.current.focus();
-          }
-        });
+        socket.timeout(5000).emit('newMessage',
+          { body: values.body, channelId: currentChannelId, username: currentUser },
+          (err) => {
+            if (err) {
+              //console.log("can't find server");
+              isDisabled = true;
+              resetForm();
+              notSendMessage();
+            } else {
+              //console.log('conection with the server is ' + response.status);
+              isDisabled = '';
+              setSubmitting(false);
+              resetForm();
+              formikRef.current.focus();
+            }
+          });
       }}>
       {({ handleSubmit }) => (
         <Form noValidate className="py-1 border rounded-2" onSubmit={handleSubmit}>

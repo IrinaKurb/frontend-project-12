@@ -5,23 +5,23 @@ const initialState = {
 };
 
 const messageSlice = createSlice({
-    name: 'messages',
+    name: 'messageInfo',
     initialState,
     reducers: {
-        addMessagesFromStore: (state, action) => {
-            console.log('add message from Store!');
-            const messagesFromStore = action.payload;
-            state.messages.push(...messagesFromStore);
+        addInitialMessages: (state, action) => {
+            const messages = action.payload;
+            //console.log('add message from Store!');
+            //console.log(messages);
+            state.messages.push(...messages);
         },
         addMessage(state, action) {
             console.log('add new message!');
             const newMessage = action.payload;
             state.messages.push(newMessage);
         },
-
     },
 });
 
-export const { addMessagesFromStore, addMessage } = messageSlice.actions; // достали action
+export const { addInitialMessages, addMessage } = messageSlice.actions; // достали action
 
 export default messageSlice.reducer; // экспорт редьюсеров, которые и должны юыть подключены в стор

@@ -37,8 +37,8 @@ export const LoginPage = () => {
                 />
               </div>
               <Formik
-                initialValues={{ username: '', password: '' }}
                 validationSchema={SignupSchema}
+                initialValues={{ username: '', password: '' }}
                 onSubmit={(values, { setSubmitting }) => {
                   axios.post(routes.loginApiPath(), values).then((response) => {
                     console.log(response.data);

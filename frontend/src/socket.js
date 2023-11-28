@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import store from './store/index.js';
 import { addMessage } from './store/messageSlice.js';
+import { addChannel } from './store/channelSlice.js';
 import { toast } from "react-toastify";
 
 const { dispatch } = store;
@@ -8,7 +9,7 @@ const { dispatch } = store;
 const initSocket = (i18n) => {
     const socket = io('http://localhost:3000');
     const { t } = i18n();
-    console.log('create socket');
+    // console.log('create socket');
 
     socket.on('connect', () => {
         toast.success(t('chatPage.messagesForUser.connected'), {
@@ -27,7 +28,9 @@ const initSocket = (i18n) => {
         dispatch(addMessage(newMessage));
     });
 
-    
+    socket.on('newChannel', (payload) => {
+        dispatch(addChannel(payload));
+      });
 
     return socket;
 };

@@ -32,6 +32,11 @@ export default {
                 title: 'Добавить канал',
                 reset: 'Отменить',
                 send: 'Отправить',
+                channelCreated: 'Канал создан',
+                removeChannel: 'Удалить канал',
+                conformation: 'Уверены?',
+                delete: 'Удалить', 
+                channelRemoved: 'Канал удален',
                 errors: {
                     uniq: 'Должно быть уникальным',
                     maxLength: 'От 3 до 20 символов',

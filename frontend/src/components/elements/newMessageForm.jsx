@@ -30,12 +30,13 @@ const NewMessageForm = () => {
 
   useEffect(() => {
     console.log("рендер newMessageForm");
-}, []);
+  }, []);
 
   return (
     <Formik
       initialValues={{ body: '' }}
       onSubmit={(values, { setSubmitting, resetForm }) => {
+        if (values.body.length === 0) return;
 
         socket.timeout(5000).emit('newMessage',
           { body: values.body, channelId: currentChannelId, username: currentUser },

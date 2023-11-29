@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { remove } from "lodash";
 
 const initialState = {
     channels: [],
@@ -25,9 +26,19 @@ const channelSlice = createSlice({
             const newChannelName = action.payload;
             state.channels.push(newChannelName);
         },
+        removeChannel(state, action) {
+            const defaultChannelId = 1;
+            console.log(action.payload);
+            const { id } = action.payload;
+            console.log("id channel: " + id);
+            //state.channels = state.channels.filter((channel) => channel.id !== id);
+            remove(state.channels, (item) => item.id === id); // обновили channels
+            state.currentChannelId = defaultChannelId;
+
+        }
     },
 });
 
-export const { addInitialChannel, setCurrentChannelId, addChannel } = channelSlice.actions; // достали action
+export const { addInitialChannel, setCurrentChannelId, addChannel, removeChannel } = channelSlice.actions; // достали action
 
 export default channelSlice.reducer; // экспорт редьюсеров, которые и должны быть подключены в стор

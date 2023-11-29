@@ -9,8 +9,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { addInitialChannel, setCurrentChannelId } from '../../store/channelSlice';
 import { addInitialMessages } from '../../store/messageSlice';
-//import ModalWindow from '../elements/modalWindows';
-import { AddNewChannelModal } from '../elements/modalWindows';
+import ModalWindow from '../elements/modalWindows';
 
 const ChatPage = () => {
   //const { t } = useTranslation();
@@ -35,7 +34,7 @@ const ChatPage = () => {
   */
 
       setLoad(true);
-      console.log(response);
+      //console.log(response);
       const { channels, messages, currentChannelId } = response.data;
       dispatch(addInitialChannel(channels));
       dispatch(setCurrentChannelId(currentChannelId));
@@ -53,7 +52,7 @@ const ChatPage = () => {
     <>
       {token ? (
         <>
-        <AddNewChannelModal />
+        <ModalWindow />
         <div className="container h-100 my-4 overflow-hidden rounded shadow">
           <div className="row h-100 bg-white flex-md-row">
             <ChannelsBox />

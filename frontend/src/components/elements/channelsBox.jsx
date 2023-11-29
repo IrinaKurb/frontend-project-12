@@ -9,27 +9,18 @@ import { setCurrentChannelId } from '../../store/channelSlice';
 import { openModalWindow } from '../../store/modalSlice';
 // import { animateScroll } from 'react-scroll';
 
-const Channel = ({ channelName, id, isRemovable, isCurrent }) => {
+const Channel = ({ channelName, isRemovable, isCurrent, handleRemove, handleChoose }) => {
     //console.log(channelName, key, id, isRemovable, isCurrent);
     const { t } = useTranslation();
-    const dispatch = useDispatch();
     const isChoosenBtn = isCurrent ? 'secondary' : null;
-
-    const chooseActiveChannel = () => {
-        //console.log('Choose! ' + channelName + id);
-        dispatch(setCurrentChannelId(id));
-    };
-
-    //console.log(useSelector(state => state))
 
     return (
         <li className="nav-item w-100">
-            <Dropdown as={ButtonGroup} className="d-flex">
+            <Dropdown as={ButtonGroup} className="d-flex" onClick={handleChoose}>
                 <Button
                     type="button"
                     className="w-100 rounded-0 text-start text-truncate btn"
                     variant={isChoosenBtn}
-                    onClick={chooseActiveChannel}
                 >
                     <span className="me-1">#</span>
                     {channelName}
@@ -41,8 +32,8 @@ const Channel = ({ channelName, id, isRemovable, isCurrent }) => {
                         </Dropdown.Toggle>
 
                         < Dropdown.Menu >
-                            <Dropdown.Item onClick={() => console.log('Delete!')}>{t('chatPage.delete')}</Dropdown.Item>
-                            <Dropdown.Item onClick={() => console.log('Reneme!')}>{t('chatPage.rename')}</Dropdown.Item>
+                            <Dropdown.Item onClick={handleRemove}>{t('chatPage.delete')}</Dropdown.Item>
+                            <Dropdown.Item onClick={() => console.log('Rename!')}>{t('chatPage.rename')}</Dropdown.Item>
                         </Dropdown.Menu>
                     </>)
                     : (
@@ -59,10 +50,26 @@ const ChannelsBox = () => {
     const dispatch = useDispatch();
     const {channels, currentChannelId} = useSelector((state) => state.channelsStore);
 
+    const chooseActiveChannel = (id) => () => {
+        console.log('Choose! ' + id);
+        dispatch(setCurrentChannelId(id));
+    };
+
     const addNewChannel = () => {
         console.log('add New Channel! Press buttom "+"');
         dispatch(openModalWindow({ modalType: 'addChannel' }));
     };
+
+    const removeChannel = () => {
+        console.log('delete Channel!');
+        dispatch(openModalWindow({ modalType: 'removeChannel', idChannelForRemove: currentChannelId }));
+    };
+
+    /*
+    useEffect(()=> {
+        console.log("rerender channels box");
+    }, [dispatch]);
+    */
 
     return (
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -89,7 +96,8 @@ const ChannelsBox = () => {
                         id={channel.id}
                         isRemovable={channel.removable}
                         isCurrent={channel.id === currentChannelId}
-                        handleRemove={() => console.log('Delete Chanel!')}
+                        handleChoose = {chooseActiveChannel(channel.id)}
+                        handleRemove={removeChannel}
                         handleRename={() => console.log('Rename Chanel!')}
                     />
                 ))}

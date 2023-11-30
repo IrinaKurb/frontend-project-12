@@ -1,4 +1,4 @@
-import { React, useContext } from 'react';
+import { React, useContext, useRef, useEffect } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { getChannelsNames, getCurrentChannel } from '../../selectors.js';
 import { closeModalWindow } from '../../store/modalSlice.js';
-import { setCurrentChannelId, removeChannel } from '../../store/channelSlice.js';
+import { setCurrentChannelId, removeChannel, renameChannel } from '../../store/channelSlice.js';
 import SocketContext from '../../contexts/socketContext';
 import { toast } from "react-toastify";
 
@@ -30,7 +30,7 @@ const AddNewChannelModal = ({ handleClose }) => {
     return (
         <>
             <Modal.Header>
-                <Modal.Title>{t('modalWindow.title')}</Modal.Title>
+                <Modal.Title>{t('modalWindow.addChannel')}</Modal.Title>
                 <Button
                     variant="close"
                     type="button"
@@ -111,7 +111,7 @@ const RemoveChannelModal = ({ handleClose }) => {
 
     const handleRemove = () => {
         socket.emit('removeChannel', { id: currentChannel.id }, () => {
-            dispatch(removeChannel({ idChannelForRemove: currentChannelId }));
+            dispatch(removeChannel({ managedChannelId: currentChannelId }));
             //dispatch(addInitialChannel({channels: channels}));
             toast.success(t('modalWindow.channelRemoved'), {
                 position: toast.POSITION.TOP_RIGHT,
@@ -123,7 +123,7 @@ const RemoveChannelModal = ({ handleClose }) => {
     return (
         <>
             <Modal.Header>
-                <Modal.Title>{`${t('modalWindow.removeChannel')} "# ${currentChannel.name}"`}</Modal.Title>
+                <Modal.Title>{`${t('modalWindow.removeChannel')} # '${currentChannel.name}'`}</Modal.Title>
                 <Button
                     variant="close"
                     type="button"
@@ -147,7 +147,7 @@ const RemoveChannelModal = ({ handleClose }) => {
                     <Button
                         variant="danger"
                         type="button"
-                        onClick={ handleRemove }
+                        onClick={handleRemove}
                     //disabled={loading}
                     >
                         {t('modalWindow.delete')}
@@ -156,12 +156,97 @@ const RemoveChannelModal = ({ handleClose }) => {
             </Modal.Body>
         </>
     );
+};
 
-}
+const RenameChannelModal = ({ handleClose }) => {
+    const dispatch = useDispatch();
+    const channels = useSelector(getChannelsNames);
+    const currentChannel = useSelector(getCurrentChannel);
+    const { t } = useTranslation();
+    const inputRef = useRef(null);
+    const socket = useContext(SocketContext);
+
+    useEffect(() => {
+        setTimeout(() => inputRef.current.select());
+      }, []);
+
+    return (
+        <>
+            <Modal.Header>
+                <Modal.Title>{t('modalWindow.renameChannel')}</Modal.Title>
+                <Button
+                    variant="close"
+                    type="button"
+                    onClick={handleClose}
+                    aria-label="Close"
+                    data-bs-dismiss="modal"
+                />
+            </Modal.Header>
+            <Modal.Body>
+                <Formik
+                    initialValues={{ name: currentChannel.name, id: currentChannel.id }}
+                    validationSchema={getValidationSchema(channels)}
+                    validateOnChange={false}
+                    validateOnBlur={false}
+                    
+                    onSubmit={(values, { setSubmitting }) => {
+                        setSubmitting(false);
+                        console.log('Click rename! '+JSON.stringify(values));
+                        
+                        socket.emit('renameChannel', { id: values.id, name: values.name }, () => {
+                            dispatch(renameChannel(values));
+                            console.log(values);
+                            toast.success(t('modalWindow.channelRenamed'), {
+                                position: toast.POSITION.TOP_RIGHT,
+                            });
+                        });
+                        handleClose();
+                    }}
+                >
+                    {({ handleSubmit, handleChange, values, errors }) => (
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group>
+                                <Form.Control
+                                    type="text"
+                                    name="name"
+                                    className="mb-2"
+                                    ref={inputRef}
+                                    value={values.name}
+                                    onChange={handleChange}
+                                    isInvalid={errors.name}
+                                />
+                                {errors.name ? (
+                                    <Form.Control.Feedback type='invalid'>{t(errors.name)}</Form.Control.Feedback>
+                                ) : null}
+                            </Form.Group>
+                            <div className="d-flex justify-content-end">
+                                <Button
+                                    className="me-2"
+                                    variant="secondary"
+                                    type="button"
+                                    onClick={handleClose}
+                                >
+                                    {t('modalWindow.reset')}
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                >
+                                    {t('modalWindow.send')}
+                                </Button>
+                            </div>
+                        </Form>
+                    )}
+                </ Formik>
+            </Modal.Body >
+        </>
+    );
+};
 
 const mappingForWindowType = {
     addChannel: AddNewChannelModal,
     removeChannel: RemoveChannelModal,
+    renameChannel: RenameChannelModal,
 };
 
 const ModalWindow = () => {

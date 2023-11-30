@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import store from './store/index.js';
 import { addMessage } from './store/messageSlice.js';
-import { addChannel, removeChannel } from './store/channelSlice.js';
+import { addChannel, removeChannel, renameChannel } from './store/channelSlice.js';
 import { toast } from "react-toastify";
 
 const { dispatch } = store;
@@ -33,10 +33,14 @@ const initSocket = (i18n) => {
     });
 
     socket.on('removeChannel', (payload) => {
-        // console.log(payload); // { id: 6 };
         dispatch(removeChannel(payload));
     });
 
+    socket.on('renameChannel', (payload) => {
+        console.log(payload);
+        dispatch(renameChannel(payload));
+      });
+    
     return socket;
 };
 

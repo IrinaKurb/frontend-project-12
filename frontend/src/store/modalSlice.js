@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     isOpened: false,
     modalType: null,
-    idChannelForRemove: null,
+    managedChannelId: null,
 }
 
 const modalsSlice = createSlice({
@@ -12,12 +12,12 @@ const modalsSlice = createSlice({
     reducers: {
         openModalWindow: (state, action) => {
             console.log(action)
-            const { modalType, idChannelForRemove } = action.payload;
+            const { modalType, managedChannelId } = action.payload;
             console.log("modalType");
             console.log(action.payload);
             state.isOpened = true;
             state.modalType = modalType;
-            state.idChannelForRemove = idChannelForRemove ?? null;
+            state.managedChannelId = managedChannelId ?? null;
         },
         closeModalWindow: (state) => {
             state.isOpened = false;

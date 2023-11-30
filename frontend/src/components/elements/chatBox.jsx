@@ -25,7 +25,7 @@ const ChatBox = () => {
   const currentChannel = useSelector(getCurrentChannel);
   const currentMessages = useSelector(getMessagesForCurrentChannel);
 
-  console.log(currentMessages);
+  //console.log(currentMessages);
   useEffect(() => {
 
   }, [currentMessages.length]);

@@ -9,7 +9,7 @@ import { setCurrentChannelId } from '../../store/channelSlice';
 import { openModalWindow } from '../../store/modalSlice';
 // import { animateScroll } from 'react-scroll';
 
-const Channel = ({ channelName, isRemovable, isCurrent, handleRemove, handleChoose }) => {
+const Channel = ({ channelName, isRemovable, isCurrent, handleRemove, handleChoose, handleRename }) => {
     //console.log(channelName, key, id, isRemovable, isCurrent);
     const { t } = useTranslation();
     const isChoosenBtn = isCurrent ? 'secondary' : null;
@@ -33,7 +33,7 @@ const Channel = ({ channelName, isRemovable, isCurrent, handleRemove, handleChoo
 
                         < Dropdown.Menu >
                             <Dropdown.Item onClick={handleRemove}>{t('chatPage.delete')}</Dropdown.Item>
-                            <Dropdown.Item onClick={() => console.log('Rename!')}>{t('chatPage.rename')}</Dropdown.Item>
+                            <Dropdown.Item onClick={handleRename}>{t('chatPage.rename')}</Dropdown.Item>
                         </Dropdown.Menu>
                     </>)
                     : (
@@ -48,7 +48,7 @@ const Channel = ({ channelName, isRemovable, isCurrent, handleRemove, handleChoo
 const ChannelsBox = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const {channels, currentChannelId} = useSelector((state) => state.channelsStore);
+    const { channels, currentChannelId } = useSelector((state) => state.channelsStore);
 
     const chooseActiveChannel = (id) => () => {
         console.log('Choose! ' + id);
@@ -62,7 +62,12 @@ const ChannelsBox = () => {
 
     const removeChannel = () => {
         console.log('delete Channel!');
-        dispatch(openModalWindow({ modalType: 'removeChannel', idChannelForRemove: currentChannelId }));
+        dispatch(openModalWindow({ modalType: 'removeChannel', managedChannelId: currentChannelId }));
+    };
+
+    const renameChannel = () => {
+        console.log('rename Channel!');
+        dispatch(openModalWindow({ modalType: 'renameChannel', managedChannelId: currentChannelId }));
     };
 
     /*
@@ -96,9 +101,9 @@ const ChannelsBox = () => {
                         id={channel.id}
                         isRemovable={channel.removable}
                         isCurrent={channel.id === currentChannelId}
-                        handleChoose = {chooseActiveChannel(channel.id)}
+                        handleChoose={chooseActiveChannel(channel.id)}
                         handleRemove={removeChannel}
-                        handleRename={() => console.log('Rename Chanel!')}
+                        handleRename={renameChannel}
                     />
                 ))}
             </ul>

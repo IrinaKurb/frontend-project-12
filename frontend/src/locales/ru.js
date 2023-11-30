@@ -28,6 +28,21 @@ export default {
                     messageNotSend: 'Сообщение не отправлено!',
                 },
             },
+            registrationPage: {
+                title: 'Регистрация',
+                userName: 'Имя пользователя',
+                password: 'Пароль',
+                confPassword: 'Подтвердите пароль',
+                regisration: 'Зарегистрироваться',
+                errors: {
+                    samePassword: 'Пароли должны совпадать',
+                    sameUser: 'Такой пользователь уже существует',
+                    minPasswordLength: 'Не менее 6 символов',
+                    maxLength: 'От 3 до 20 символов',
+                    minLength: 'От 3 до 20 символов',
+                    required: 'Обязательное поле', 
+                },
+            },
             modalWindow: {
                 addChannel: 'Добавить канал',
                 reset: 'Отменить',

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { NotFoundPage } from './components/pages/pageNotFound.jsx';
 import { LoginPage } from './components/pages/loginPage.jsx';
 import ChatPage from './components/pages/chatPage.jsx';
+import { RegistrationPage } from './components/pages/RegistrationPage.jsx';
 import routes from './routes.js';
 import TokenContext from './contexts/tokenContext.jsx';
 import { Provider } from 'react-redux';
@@ -38,6 +39,7 @@ class App extends React.Component {
               <Routes >
                 <Route path={routes.chatPagePath()} element={<ChatPage />} />
                 <Route path={routes.loginPagePath()} element={<LoginPage />} />
+                <Route path={routes.signupPagePath()} element={<RegistrationPage />} />
                 <Route path='*' element={<NotFoundPage />} />
               </Routes>
             </div>

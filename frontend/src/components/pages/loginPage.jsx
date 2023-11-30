@@ -16,7 +16,7 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const [ isValidForm, setValidStatus ] = useState(true);
 
-  const SignupSchema = Yup.object().shape({
+  const valiationSchema = Yup.object().shape({
     username: Yup.string().required(t('singUpPage.requiredField')),
     password: Yup.string().required(t('singUpPage.requiredField')),
   });
@@ -37,7 +37,7 @@ export const LoginPage = () => {
                 />
               </div>
               <Formik
-                validationSchema={SignupSchema}
+                validationSchema={valiationSchema}
                 initialValues={{ username: '', password: '' }}
                 onSubmit={(values, { setSubmitting }) => {
                   axios.post(routes.loginApiPath(), values).then((response) => {
@@ -107,7 +107,7 @@ export const LoginPage = () => {
               <div className="text-center">
                 <span>{t('singUpPage.noAccountQuestion')}</span>
                 {' '}
-                <Link to="/signup">{t('singUpPage.signup')}</Link>
+                <Link to={routes.signupPagePath()}>{t('singUpPage.signup')}</Link>
               </div>
             </div>
           </div>

@@ -11,7 +11,7 @@ import { setCurrentChannelId, removeChannel, renameChannel } from '../../store/c
 import SocketContext from '../../contexts/socketContext';
 import { toast } from "react-toastify";
 
-const getValidationSchema = (channels) => Yup.object().shape({
+const validationSchema = (channels) => Yup.object().shape({
     name: Yup
         .string()
         .trim()
@@ -42,7 +42,7 @@ const AddNewChannelModal = ({ handleClose }) => {
             <Modal.Body>
                 <Formik
                     initialValues={{ name: '' }}
-                    validationSchema={getValidationSchema(channels)}
+                    validationSchema={validationSchema(channels)}
                     validateOnChange={false}
                     validateOnBlur={false}
                     onSubmit={(values, { setSubmitting }) => {
@@ -185,7 +185,7 @@ const RenameChannelModal = ({ handleClose }) => {
             <Modal.Body>
                 <Formik
                     initialValues={{ name: currentChannel.name, id: currentChannel.id }}
-                    validationSchema={getValidationSchema(channels)}
+                    validationSchema={validationSchema(channels)}
                     validateOnChange={false}
                     validateOnBlur={false}
                     

@@ -1,25 +1,24 @@
-//import axios from 'axios';
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 // import { useRollbar } from '@rollbar/react';
 
 //import { useAuth } from '../hooks/index.js';
-//import routes from '../../routes.js';
+import routes from '../../routes.js';
 
 import registrationImg from '../../assets/registrationImg.png';
 
 
 export const RegistrationPage = () => {
   const { t } = useTranslation();
-  //const auth = useAuth();
   const [registrationFailed, setRegistrationFailed] = useState(false);
-  console.log(registrationFailed, setRegistrationFailed);
+  //console.log(registrationFailed, setRegistrationFailed);
   const inputRef = useRef();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   // const rollbar = useRollbar();
   useEffect(() => {
     inputRef.current.focus();
@@ -64,7 +63,27 @@ export const RegistrationPage = () => {
                   confirmPassword: '',
                 }}
                 onSubmit={(values) => {
-                  console.log(values)
+                  const makeRequest = async () => {
+                    try {
+                      await axios.post(routes.signupApiPath(),
+                        { username: values.username, password: values.password })
+                        .then((response) => {
+                          console.log('response' + JSON.stringify(response.data));
+                          const token = response.data.token;
+                          const userName = response.data.username;
+                          localStorage.setItem('token', JSON.stringify(token));
+                          localStorage.setItem('userName', JSON.stringify(userName));
+                        });
+                      setRegistrationFailed(false);
+                      navigate(routes.chatPagePath());
+                    } catch (err) {
+                      console.log(err.response.data.statusCode);
+                      if (err.response.data.statusCode === 409)
+                      setRegistrationFailed(true);
+                    }
+                  }
+                  makeRequest();
+                  //console.log(values)
                 }}
               >
                 {({ touched, handleBlur, handleChange, handleSubmit, errors, values }) => (
@@ -80,8 +99,7 @@ export const RegistrationPage = () => {
                         id="username"
                         autoComplete="username"
                         isInvalid={
-                          (errors.username && touched.username)
-                          || registrationFailed
+                          (errors.username && touched.username) || registrationFailed
                         }
                         required
                         ref={inputRef}
@@ -102,8 +120,7 @@ export const RegistrationPage = () => {
                         id="password"
                         aria-describedby="passwordHelpBlock"
                         isInvalid={
-                          (errors.password && touched.password)
-                          || registrationFailed
+                          (errors.password && touched.password) || registrationFailed
                         }
                         required
                         autoComplete="new-password"
@@ -123,16 +140,13 @@ export const RegistrationPage = () => {
                         name="confirmPassword"
                         id="confirmPassword"
                         isInvalid={
-                          (errors.confirmPassword && touched.confirmPassword)
-                          || registrationFailed
+                          (errors.confirmPassword && touched.confirmPassword) || registrationFailed
                         }
                         required
                         autoComplete="new-password"
                       />
                       <Form.Control.Feedback type="invalid" tooltip>
-                        {registrationFailed
-                          ? t('registrationPage.errors.sameUser')
-                          : t(errors.confirmPassword)}
+                        {registrationFailed ? t('registrationPage.errors.sameUser') : t(errors.confirmPassword)}
                       </Form.Control.Feedback>
                       <Form.Label htmlFor="confirmPassword">{t('registrationPage.confPassword')}</Form.Label>
                     </Form.Group>

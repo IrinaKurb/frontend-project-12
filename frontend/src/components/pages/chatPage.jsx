@@ -27,11 +27,6 @@ const ChatPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-/*
-      axios.post('/api/v1/signup', { username: 'murzik1', password: '123456' }).then((response) => {
-        console.log(response.data); // => { token: ..., username: 'newuser' }
-      });
-  */
 
       setLoad(true);
       //console.log(response);

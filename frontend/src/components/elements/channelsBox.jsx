@@ -60,14 +60,14 @@ const ChannelsBox = () => {
         dispatch(openModalWindow({ modalType: 'addChannel' }));
     };
 
-    const removeChannel = () => {
+    const removeChannel = (id) => () => {
         console.log('delete Channel!');
-        dispatch(openModalWindow({ modalType: 'removeChannel', managedChannelId: currentChannelId }));
+        dispatch(openModalWindow({ modalType: 'removeChannel', managedChannelId: id }));
     };
 
-    const renameChannel = () => {
+    const renameChannel = (id) => () => {
         console.log('rename Channel!');
-        dispatch(openModalWindow({ modalType: 'renameChannel', managedChannelId: currentChannelId }));
+        dispatch(openModalWindow({ modalType: 'renameChannel', managedChannelId: id }));
     };
 
     /*
@@ -102,8 +102,8 @@ const ChannelsBox = () => {
                         isRemovable={channel.removable}
                         isCurrent={channel.id === currentChannelId}
                         handleChoose={chooseActiveChannel(channel.id)}
-                        handleRemove={removeChannel}
-                        handleRename={renameChannel}
+                        handleRemove={removeChannel(channel.id)}
+                        handleRename={renameChannel(channel.id)}
                     />
                 ))}
             </ul>

@@ -19,18 +19,12 @@ const NewMessageForm = () => {
   const currentUser = JSON.parse(localStorage.getItem('userName'));
   const currentChannelId = useSelector((state) => state.channelsStore.currentChannelId);
   let isDisabled = false;
-  // console.log(currentUser);
-  // const rollbar = useRollbar();
 
   const notSendMessage = () => {
     toast.error(t('chatPage.messagesForUser.messageNotSend'), {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
-
-  useEffect(() => {
-    console.log("рендер newMessageForm");
-  }, []);
 
   return (
     <Formik
@@ -43,12 +37,10 @@ const NewMessageForm = () => {
           { body: filter.clean(values.body), channelId: currentChannelId, username: currentUser },
           (err) => {
             if (err) {
-              //console.log("can't find server");
               isDisabled = true;
               resetForm();
               notSendMessage();
             } else {
-              //console.log('conection with the server is ' + response.status);
               isDisabled = '';
               setSubmitting(false);
               resetForm();

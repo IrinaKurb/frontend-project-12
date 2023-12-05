@@ -18,14 +18,11 @@ const Message = ({ user, textMessage }) => {
 };
 
 const ChatBox = () => {
-  //const dispatch = useDispatch();
   const { t } = useTranslation();
-  //console.log(state);
 
   const currentChannel = useSelector(getCurrentChannel);
   const currentMessages = useSelector(getMessagesForCurrentChannel);
 
-  //console.log(currentMessages);
   useEffect(() => {
     animateScroll.scrollToBottom({ containerId: 'messages-box', delay: 0, duration: 0 });
   }, [currentMessages.length]);

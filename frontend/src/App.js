@@ -13,24 +13,17 @@ import initI18next from './init18next';
 
 import Navbar from './components/elements/navigationPannel.jsx';
 
-import { Provider, ErrorBoundary } from '@rollbar/react'; // Provider imports 'rollbar'
-
 class App extends React.Component {
   constructor(props) {
     super(props);
     initI18next();
     const filter = require('leo-profanity');
     filter.loadDictionary('ru');
-
+    
     this.updateToken = () => {
       this.setState(() => ({
         token: JSON.parse(localStorage.getItem('token'))
       }));
-
-      const rollbarConfig = {
-        accessToken: 'cd8eec1286324a69ae13f47aac11eeb4',
-        environment: 'testenv',
-      };
     };
 
     this.state = {
@@ -41,25 +34,21 @@ class App extends React.Component {
 
   render() {
     return (
-      <Provider config={rollbarConfig}>
-        <ErrorBoundary>
-          <Provider store={store}>
-            <TokenContext.Provider value={this.state}>
-              <BrowserRouter>
-                <div className="d-flex flex-column h-100">
-                  <Navbar />
-                  <Routes >
-                    <Route path={routes.chatPagePath()} element={<ChatPage />} />
-                    <Route path={routes.loginPagePath()} element={<LoginPage />} />
-                    <Route path={routes.signupPagePath()} element={<RegistrationPage />} />
-                    <Route path='*' element={<NotFoundPage />} />
-                  </Routes>
-                </div>
-              </BrowserRouter>
-            </TokenContext.Provider>
-          </Provider>
-        </ErrorBoundary>
-      </Provider >
+      <Provider store={store}>
+        <TokenContext.Provider value={this.state}>
+          <BrowserRouter>
+            <div className="d-flex flex-column h-100">
+              <Navbar />
+              <Routes >
+                <Route path={routes.chatPagePath()} element={<ChatPage />} />
+                <Route path={routes.loginPagePath()} element={<LoginPage />} />
+                <Route path={routes.signupPagePath()} element={<RegistrationPage />} />
+                <Route path='*' element={<NotFoundPage />} />
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </TokenContext.Provider>
+      </Provider>
     )
   }
 }

@@ -3,14 +3,11 @@ import { useSelector } from 'react-redux';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-//import { getCurrentChannel } from '../../selectors';
 import { useDispatch } from 'react-redux';
 import { setCurrentChannelId } from '../../store/channelSlice';
 import { openModalWindow } from '../../store/modalSlice';
-// import { animateScroll } from 'react-scroll';
 
 const Channel = ({ channelName, isRemovable, isCurrent, handleRemove, handleChoose, handleRename }) => {
-    //console.log(channelName, key, id, isRemovable, isCurrent);
     const { t } = useTranslation();
     const isChoosenBtn = isCurrent ? 'secondary' : null;
 
@@ -51,30 +48,20 @@ const ChannelsBox = () => {
     const { channels, currentChannelId } = useSelector((state) => state.channelsStore);
 
     const chooseActiveChannel = (id) => () => {
-        console.log('Choose! ' + id);
         dispatch(setCurrentChannelId(id));
     };
 
     const addNewChannel = () => {
-        console.log('add New Channel! Press buttom "+"');
         dispatch(openModalWindow({ modalType: 'addChannel' }));
     };
 
     const removeChannel = (id) => () => {
-        console.log('delete Channel!');
         dispatch(openModalWindow({ modalType: 'removeChannel', managedChannelId: id }));
     };
 
     const renameChannel = (id) => () => {
-        console.log('rename Channel!');
         dispatch(openModalWindow({ modalType: 'renameChannel', managedChannelId: id }));
     };
-
-    /*
-    useEffect(()=> {
-        console.log("rerender channels box");
-    }, [dispatch]);
-    */
 
     return (
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">

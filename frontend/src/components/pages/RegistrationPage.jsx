@@ -19,10 +19,8 @@ export const RegistrationPage = () => {
   const { t } = useTranslation();
   const [registrationFailed, setRegistrationFailed] = useState(false);
   const [isActiveBtn, setIsActiveBtn] = useState(true);
-  //console.log(registrationFailed, setRegistrationFailed);
   const inputRef = useRef();
   const navigate = useNavigate();
-  // const rollbar = useRollbar();
   const { updateToken } = useContext(TokenContext);
   useEffect(() => {
     inputRef.current.focus();
@@ -72,7 +70,6 @@ export const RegistrationPage = () => {
                       await axios.post(routes.signupApiPath(),
                         { username: values.username, password: values.password })
                         .then((response) => {
-                          console.log('response' + JSON.stringify(response));
                           const token = response.data.token;
                           const userName = response.data.username;
                           localStorage.setItem('token', JSON.stringify(token));
@@ -84,16 +81,13 @@ export const RegistrationPage = () => {
                         })
                       setIsActiveBtn(true);
                     } catch (err) {
-                      //console.log(err.response.data.statusCode);
                       if (err.response.data.statusCode === 409) {
                         setRegistrationFailed(true);
                       }
                       else if (!err.isAxiosError) {
                         toast.error(t('unknownError'));
-                        //console.log('I am in AXIOS ERROR');
                         return;
                       } else {
-                        //console.log('I am in NETWORK ERROR');
                         toast.error(t('networkError'), {
                           position: toast.POSITION.TOP_RIGHT,
                         });
@@ -101,7 +95,6 @@ export const RegistrationPage = () => {
                     }
                   }
                   makeRequest();
-                  //console.log(values)
                 }
                 }
               >

@@ -43,8 +43,6 @@ export const LoginPage = () => {
                     onSubmit={(values, { setSubmitting }) => {
 
                       axios.post(routes.loginApiPath(), values).then((response) => {
-                        console.log("my response: ");
-                        console.log(JSON.stringify(response));
                         const token = response.data.token;
                         const userName = response.data.username;
                         localStorage.setItem('token', JSON.stringify(token));
@@ -53,8 +51,6 @@ export const LoginPage = () => {
                         navigate(routes.chatPagePath());
                         setIsActiveBtn(false);
                       }).catch((error) => {
-                        //console.log('Validation Error!');
-                        console.log("error: " + error);
                         if (!error.isAxiosError) {
                           toast.error(t('unknownError'));
                           return;

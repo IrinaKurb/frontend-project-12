@@ -11,10 +11,7 @@ const modalsSlice = createSlice({
     initialState,
     reducers: {
         openModalWindow: (state, action) => {
-            console.log(action)
             const { modalType, managedChannelId } = action.payload;
-            console.log("modalType");
-            console.log(action.payload);
             state.isOpened = true;
             state.modalType = modalType;
             state.managedChannelId = managedChannelId ?? null;

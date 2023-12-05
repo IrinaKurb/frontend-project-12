@@ -16,35 +16,27 @@ const ChatPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { token } = useContext(TokenContext);
-  console.log(token);
   const [isLoad, setLoad] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("рендерится ChatPage");
     const requestData = async () => {
-      //console.log('I am in TRY');
       try {
-        //console.log('I am in TRY');
         const response = await axios.get(routes.dataApiPath(), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         setLoad(true);
-        console.log(response);
         const { channels, messages, currentChannelId } = response.data;
         dispatch(addInitialChannel(channels));
         dispatch(setCurrentChannelId(currentChannelId));
         dispatch(addInitialMessages(messages));
       } catch (error) {
-        console.log('I am in CATCH');
         if (!error.isAxiosError) {
           toast.error(t('unknownError'));
-          console.log('I am in AXIOS ERROR');
           return;
         } else {
-          console.log('I am in NETWORK ERROR');
           toast.error(t('networkError'), {
             position: toast.POSITION.TOP_RIGHT,
           });

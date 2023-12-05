@@ -59,15 +59,11 @@ const AddNewChannelModal = ({ handleClose }) => {
                         setSubmitting(false);
                         socket.timeout(1000).emit('newChannel', { name: filter.clean(values.name) }, (error, response) => {
                             if (error) {
-                                console.log('Add Channel Error!');
                                 setIsActiveBtn(false);
                                 notAddChannel();
                             } else {
-                                console.log("id = " + response.data);
                                 const { id } = response.data;
                                 dispatch(setCurrentChannelId(id));
-                                //console.log("ok");
-                                console.log(response);
                                 handleClose();
                             }
                         });
@@ -222,7 +218,6 @@ const RenameChannelModal = ({ handleClose }) => {
 
                     onSubmit={(values, { setSubmitting }) => {
                         setSubmitting(false);
-                        console.log('Click rename! ' + JSON.stringify(values));
 
                         socket.timeout(1000).emit('renameChannel', { id: values.id, name: filter.clean(values.name) }, (error) => {
                             if (error) {
@@ -286,16 +281,10 @@ const mappingForWindowType = {
 const ModalWindow = () => {
     const dispatch = useDispatch();
     const { isOpened } = useSelector((state) => state.modalsWindows);
-    console.log("is opened");
-    console.log(isOpened);
     const handleCloseWindow = () => { dispatch(closeModalWindow()) };
 
     const { modalType } = useSelector((state) => state.modalsWindows);
-    console.log("modalType");
-    console.log(modalType);
     const ModalComponent = mappingForWindowType[modalType];
-    //console.log("modal component: ");
-    //console.log(ModalComponent);
 
     return (
         <>

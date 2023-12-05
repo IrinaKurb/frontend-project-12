@@ -11,12 +11,10 @@ const Navbar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { updateToken, token } = useContext(TokenContext);
-  console.log(token, updateToken);
 
   const dispatch = useDispatch();
 
   const handleLogOut = () => {
-    console.log('Click LogOut!');
     navigate(routes.loginPagePath());
     const emptyToken = '';
     const emptyUser = '';
@@ -25,7 +23,6 @@ const Navbar = () => {
     localStorage.setItem('token', JSON.stringify(emptyToken));
     localStorage.setItem('userName', JSON.stringify(emptyUser));
     dispatch({ type: 'logout' });
-    console.log(updateToken);
   };
   return (
     <>

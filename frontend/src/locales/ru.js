@@ -20,7 +20,7 @@ export default {
                 messages_many: "{{count}} сообщений",
                 inputMessage: "Введите сообщение...",
                 exit: "Выйти",
-                chatName: "Мой секретный чат",
+                chatName: "Hexlet Chat",
                 delete: "Удалить",
                 rename: "Переименовать",
                 messagesForUser: {

@@ -9,7 +9,6 @@ const { dispatch } = store;
 const initSocket = (i18n) => {
     const socket = io('http://localhost:3000');
     const { t } = i18n();
-    // console.log('create socket');
 
     socket.on('connect', () => {
         toast.success(t('chatPage.messagesForUser.connected'), {
@@ -24,7 +23,6 @@ const initSocket = (i18n) => {
     });
 
     socket.on('newMessage', (newMessage) => {
-        console.log("messageForSending: " + JSON.stringify(newMessage));
         dispatch(addMessage(newMessage));
     });
 
@@ -43,7 +41,6 @@ const initSocket = (i18n) => {
     });
 
     socket.on('renameChannel', (payload) => {
-        console.log(payload);
         dispatch(renameChannel(payload));
         toast.success(t('modalWindow.channelRenamed'), {
             position: toast.POSITION.TOP_RIGHT,

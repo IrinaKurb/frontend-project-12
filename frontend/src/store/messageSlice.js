@@ -12,12 +12,9 @@ const messageSlice = createSlice({
     reducers: {
         addInitialMessages: (state, action) => {
             const messages = action.payload;
-            //console.log('add message from Store!');
-            //console.log(messages);
             state.messages.push(...messages);
         },
         addMessage(state, action) {
-            console.log('add new message!');
             const newMessage = action.payload;
             state.messages.push(newMessage);
         },
@@ -26,15 +23,8 @@ const messageSlice = createSlice({
         builder
             .addCase(removeChannel, (state, { payload }) => {
                 const { channelId } = payload;
-                console.log(payload);
                 remove(state.messages, (message) => message.channelId === channelId);
-            })
-            /*.addCase(addInitialChannel, (state, { payload }) => {
-                console.log(payload);
-                const { messages } = payload;
-                state.messages = messages;
-            });*/
-            
+            })  
     },
 });
 

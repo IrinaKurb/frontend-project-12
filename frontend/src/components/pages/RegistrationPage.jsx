@@ -1,25 +1,29 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 // import { useRollbar } from '@rollbar/react';
+import { toast, ToastContainer } from 'react-toastify';
 
 //import { useAuth } from '../hooks/index.js';
 import routes from '../../routes.js';
 
 import registrationImg from '../../assets/registrationImg.png';
+import TokenContext from '../../contexts/tokenContext.jsx';
 
 
 export const RegistrationPage = () => {
   const { t } = useTranslation();
   const [registrationFailed, setRegistrationFailed] = useState(false);
+  const [isActiveBtn, setIsActiveBtn] = useState(true);
   //console.log(registrationFailed, setRegistrationFailed);
   const inputRef = useRef();
   const navigate = useNavigate();
   // const rollbar = useRollbar();
+  const { updateToken } = useContext(TokenContext);
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -68,23 +72,38 @@ export const RegistrationPage = () => {
                       await axios.post(routes.signupApiPath(),
                         { username: values.username, password: values.password })
                         .then((response) => {
-                          console.log('response' + JSON.stringify(response.data));
+                          console.log('response' + JSON.stringify(response));
                           const token = response.data.token;
                           const userName = response.data.username;
                           localStorage.setItem('token', JSON.stringify(token));
                           localStorage.setItem('userName', JSON.stringify(userName));
-                        });
-                      setRegistrationFailed(false);
-                      navigate(routes.chatPagePath());
+                          setRegistrationFailed(false);
+                          setIsActiveBtn(false);
+                          updateToken();
+                          navigate(routes.chatPagePath());
+                        })
+                      setIsActiveBtn(true);
                     } catch (err) {
-                      console.log(err.response.data.statusCode);
-                      if (err.response.data.statusCode === 409)
-                      setRegistrationFailed(true);
+                      //console.log(err.response.data.statusCode);
+                      if (err.response.data.statusCode === 409) {
+                        setRegistrationFailed(true);
+                      }
+                      else if (!err.isAxiosError) {
+                        toast.error(t('unknownError'));
+                        //console.log('I am in AXIOS ERROR');
+                        return;
+                      } else {
+                        //console.log('I am in NETWORK ERROR');
+                        toast.error(t('networkError'), {
+                          position: toast.POSITION.TOP_RIGHT,
+                        });
+                      }
                     }
                   }
                   makeRequest();
                   //console.log(values)
-                }}
+                }
+                }
               >
                 {({ touched, handleBlur, handleChange, handleSubmit, errors, values }) => (
                   <Form onSubmit={handleSubmit} className="w-50">
@@ -150,10 +169,17 @@ export const RegistrationPage = () => {
                       </Form.Control.Feedback>
                       <Form.Label htmlFor="confirmPassword">{t('registrationPage.confPassword')}</Form.Label>
                     </Form.Group>
-                    <Button type="submit" variant="outline-primary" className="w-100">{t('registrationPage.regisration')}</Button>
+                    <Button
+                      type="submit"
+                      variant="outline-primary"
+                      className="w-100"
+                      disabled={!isActiveBtn ? "disabled" : null}
+                    >{t('registrationPage.regisration')}
+                    </Button>
                   </Form>
                 )}
               </Formik>
+              <ToastContainer />
             </div>
           </div>
         </div>

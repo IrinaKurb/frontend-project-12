@@ -1,41 +1,43 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Navbar as BootstrapNavbar } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import routes from '../../routes';
 import { useNavigate } from "react-router-dom";
-//import axios from 'axios';
 import TokenContext from '../../contexts/tokenContext';
 import { useDispatch } from 'react-redux';
 
 const Navbar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { updateToken, token } = useContext(TokenContext);
+  console.log(token);
 
   const dispatch = useDispatch();
 
-  const handleLogOut = (updateToken) => {
+  const handleLogOut = () => {
     console.log('Click LogOut!');
-    navigate(routes.loginPagePath()); //работает только переход на новую страницу, разлогирования нет
+    navigate(routes.loginPagePath());
     const emptyToken = '';
     const emptyUser = '';
+    updateToken();
+  
     localStorage.setItem('token', JSON.stringify(emptyToken));
     localStorage.setItem('userName', JSON.stringify(emptyUser));
-    dispatch({type: 'logout'});
-    console.log(updateToken)
-
+    dispatch({ type: 'logout' });
+    console.log(updateToken);
   };
   return (
-    <TokenContext.Consumer>
-      {(updateToken) => (
+    <>
+      {
         <BootstrapNavbar bg="white" expand="lg" className="shadow-sm">
           <div className="container">
             <BootstrapNavbar.Brand as={Link} to={routes.loginPagePath()}>{t('chatPage.chatName')}</BootstrapNavbar.Brand>
-            {<Button onClick={() => handleLogOut(updateToken)}>{t('chatPage.exit')}</Button>}
+            {!!token && <Button onClick={() => handleLogOut()}>{t('chatPage.exit')}</Button>}
           </div>
         </BootstrapNavbar>
-      )}
-    </TokenContext.Consumer>
+      }
+    </>
   )
 };
 

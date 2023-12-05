@@ -18,7 +18,7 @@ const initSocket = (i18n) => {
     });
 
     socket.on('disconnect', () => {
-        toast.error(t('chatPage.messagesForUser.disconnected'), {
+        toast.error(t('networkError'), {
             position: toast.POSITION.TOP_RIGHT,
         });
     });
@@ -30,17 +30,26 @@ const initSocket = (i18n) => {
 
     socket.on('newChannel', (payload) => {
         dispatch(addChannel(payload));
+        toast.success(t('modalWindow.channelCreated'), {
+            position: toast.POSITION.TOP_RIGHT,
+        });
     });
 
     socket.on('removeChannel', (payload) => {
         dispatch(removeChannel(payload));
+        toast.success(t('modalWindow.channelRemoved'), {
+            position: toast.POSITION.TOP_RIGHT,
+        });
     });
 
     socket.on('renameChannel', (payload) => {
         console.log(payload);
         dispatch(renameChannel(payload));
-      });
-    
+        toast.success(t('modalWindow.channelRenamed'), {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    });
+
     return socket;
 };
 

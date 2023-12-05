@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 //import leoProfanity from 'leo-profanity';
 // import { useRollbar } from '@rollbar/react';
 import { useSelector } from 'react-redux';
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const NewMessageForm = () => {
@@ -38,7 +38,7 @@ const NewMessageForm = () => {
       onSubmit={(values, { setSubmitting, resetForm }) => {
         if (values.body.length === 0) return;
 
-        socket.timeout(5000).emit('newMessage',
+        socket.timeout(1000).emit('newMessage',
           { body: values.body, channelId: currentChannelId, username: currentUser },
           (err) => {
             if (err) {
@@ -73,7 +73,6 @@ const NewMessageForm = () => {
               <ArrowRightSquare size={20} />
               <span className="visually-hidden"></span>
             </Button>
-            <ToastContainer />
           </InputGroup>
         </Form>
       )}

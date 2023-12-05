@@ -1,4 +1,4 @@
-import { React, useContext, useRef, useEffect } from 'react';
+import { React, useContext, useRef, useEffect, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -9,7 +9,7 @@ import { getChannelsNames, getCurrentChannel } from '../../selectors.js';
 import { closeModalWindow } from '../../store/modalSlice.js';
 import { setCurrentChannelId, removeChannel, renameChannel } from '../../store/channelSlice.js';
 import SocketContext from '../../contexts/socketContext';
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const validationSchema = (channels) => Yup.object().shape({
     name: Yup
@@ -26,6 +26,14 @@ const AddNewChannelModal = ({ handleClose }) => {
     const channels = useSelector(getChannelsNames);
     const { t } = useTranslation();
     const socket = useContext(SocketContext);
+
+    const [isActiveBtn, setIsActiveBtn] = useState(true);
+
+    const notAddChannel = () => {
+        toast.error(t('networkError'), {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    };
 
     return (
         <>
@@ -47,18 +55,20 @@ const AddNewChannelModal = ({ handleClose }) => {
                     validateOnBlur={false}
                     onSubmit={(values, { setSubmitting }) => {
                         setSubmitting(false);
-                        //console.log(values);
-                        socket.emit('newChannel', { name: values.name }, (response) => {
-                            console.log("id = " + response.data);
-                            const { id } = response.data;
-                            dispatch(setCurrentChannelId(id));
-                            console.log("ok");
-                            console.log(response);
-                            toast.success(t('modalWindow.channelCreated'), {
-                                position: toast.POSITION.TOP_RIGHT,
-                            });
+                        socket.timeout(1000).emit('newChannel', { name: values.name }, (error, response) => {
+                            if (error) {
+                                console.log('Add Channel Error!');
+                                setIsActiveBtn(false);
+                                notAddChannel();
+                            } else {
+                                console.log("id = " + response.data);
+                                const { id } = response.data;
+                                dispatch(setCurrentChannelId(id));
+                                //console.log("ok");
+                                console.log(response);
+                                handleClose();
+                            }
                         });
-                        handleClose();
                     }}
                 >
                     {({ handleSubmit, handleChange, values, errors }) => (
@@ -83,11 +93,13 @@ const AddNewChannelModal = ({ handleClose }) => {
                                     variant="secondary"
                                     type="button"
                                     onClick={handleClose}
+                                    disabled={!isActiveBtn ? "disabled" : null}
                                 >
                                     {t('modalWindow.reset')}
                                 </Button>
                                 <Button
                                     variant="primary"
+                                    disabled={!isActiveBtn ? "disabled" : null}
                                     type="submit"
                                 >
                                     {t('modalWindow.send')}
@@ -106,18 +118,26 @@ const RemoveChannelModal = ({ handleClose }) => {
     const dispatch = useDispatch();
     const { currentChannelId } = useSelector((state) => state.channelsStore);
     const currentChannel = useSelector(getCurrentChannel);
+    const [isActiveBtn, setIsActiveBtn] = useState(true);
     //const channels = useSelector(getChannelsNames);
     const socket = useContext(SocketContext);
 
-    const handleRemove = () => {
-        socket.emit('removeChannel', { id: currentChannel.id }, () => {
-            dispatch(removeChannel({ managedChannelId: currentChannelId }));
-            //dispatch(addInitialChannel({channels: channels}));
-            toast.success(t('modalWindow.channelRemoved'), {
-                position: toast.POSITION.TOP_RIGHT,
-            });
+    const notRemoveChannel = () => {
+        toast.error(t('networkError'), {
+            position: toast.POSITION.TOP_RIGHT,
         });
-        handleClose();
+    };
+
+    const handleRemove = () => {
+        socket.timeout(1000).emit('removeChannel', { id: currentChannel.id }, (error) => {
+            if (error) {
+                notRemoveChannel();
+                setIsActiveBtn(false);
+            } else {
+                dispatch(removeChannel({ managedChannelId: currentChannelId }));
+                handleClose();
+            }
+        });
     };
 
     return (
@@ -140,7 +160,7 @@ const RemoveChannelModal = ({ handleClose }) => {
                         variant="secondary"
                         type="button"
                         onClick={handleClose}
-                    //disabled={loading}
+                        disabled={!isActiveBtn ? "disabled" : null}
                     >
                         {t('modalWindow.reset')}
                     </Button>
@@ -148,7 +168,7 @@ const RemoveChannelModal = ({ handleClose }) => {
                         variant="danger"
                         type="button"
                         onClick={handleRemove}
-                    //disabled={loading}
+                        disabled={!isActiveBtn ? "disabled" : null}
                     >
                         {t('modalWindow.delete')}
                     </Button>
@@ -162,13 +182,20 @@ const RenameChannelModal = ({ handleClose }) => {
     const dispatch = useDispatch();
     const channels = useSelector(getChannelsNames);
     const currentChannel = useSelector(getCurrentChannel);
+    const [isActiveBtn, setIsActiveBtn] = useState(true);
     const { t } = useTranslation();
     const inputRef = useRef(null);
     const socket = useContext(SocketContext);
 
+    const notRenameChannel = () => {
+        toast.error(t('networkError'), {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    };
+
     useEffect(() => {
         setTimeout(() => inputRef.current.select());
-      }, []);
+    }, []);
 
     return (
         <>
@@ -188,19 +215,20 @@ const RenameChannelModal = ({ handleClose }) => {
                     validationSchema={validationSchema(channels)}
                     validateOnChange={false}
                     validateOnBlur={false}
-                    
+
                     onSubmit={(values, { setSubmitting }) => {
                         setSubmitting(false);
-                        console.log('Click rename! '+JSON.stringify(values));
-                        
-                        socket.emit('renameChannel', { id: values.id, name: values.name }, () => {
-                            dispatch(renameChannel(values));
-                            console.log(values);
-                            toast.success(t('modalWindow.channelRenamed'), {
-                                position: toast.POSITION.TOP_RIGHT,
-                            });
+                        console.log('Click rename! ' + JSON.stringify(values));
+
+                        socket.timeout(1000).emit('renameChannel', { id: values.id, name: values.name }, (error) => {
+                            if (error) {
+                                setIsActiveBtn(false);
+                                notRenameChannel();
+                            } else {
+                                dispatch(renameChannel(values));
+                                handleClose();
+                            }
                         });
-                        handleClose();
                     }}
                 >
                     {({ handleSubmit, handleChange, values, errors }) => (
@@ -225,11 +253,13 @@ const RenameChannelModal = ({ handleClose }) => {
                                     variant="secondary"
                                     type="button"
                                     onClick={handleClose}
+                                    disabled={!isActiveBtn ? "disabled" : null}
                                 >
                                     {t('modalWindow.reset')}
                                 </Button>
                                 <Button
                                     variant="primary"
+                                    disabled={!isActiveBtn ? "disabled" : null}
                                     type="submit"
                                 >
                                     {t('modalWindow.send')}
@@ -264,9 +294,12 @@ const ModalWindow = () => {
     //console.log(ModalComponent);
 
     return (
-        <Modal show={isOpened} onHide={handleCloseWindow} centered>
-            {ModalComponent && <ModalComponent handleClose={handleCloseWindow} />}
-        </ Modal>
+        <>
+            <Modal show={isOpened} onHide={handleCloseWindow} centered>
+                {ModalComponent && <ModalComponent handleClose={handleCloseWindow} />}
+            </ Modal>
+            <ToastContainer />
+        </>
     );
 }
 

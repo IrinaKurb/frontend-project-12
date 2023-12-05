@@ -1,7 +1,9 @@
 export default {
     ru: {
         translation: {
-            notFoundPage: "Страница не найдена",
+            notFoundPage: 'Страница не найдена',
+            networkError: 'Ошибка сoeдинения',
+            unknownError: 'Неизвестная ошибка',
             singUpPage: {
                 requiredField: 'Oбязательное поле!',
                 username: 'Ваш ник',
@@ -10,7 +12,6 @@ export default {
                 wrongCredentials: 'Неверные имя пользователя или пароль',
                 noAccountQuestion: 'Нет аккаунта? ',
                 signup: 'Регистрация',
-                networkError: 'Ошибка соединения',
             },
             chatPage: {
                 channels: "Каналы",

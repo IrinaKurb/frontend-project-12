@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-//import { animateScroll } from 'react-scroll';
+import { animateScroll } from 'react-scroll';
 //import { useTranslation } from 'react-i18next';
 import NewMessageForm from './newMessageForm.jsx';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +27,7 @@ const ChatBox = () => {
 
   //console.log(currentMessages);
   useEffect(() => {
-
+    animateScroll.scrollToBottom({ containerId: 'messages-box', delay: 0, duration: 0 });
   }, [currentMessages.length]);
 
   return (

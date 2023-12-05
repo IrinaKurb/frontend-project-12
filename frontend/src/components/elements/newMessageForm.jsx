@@ -1,13 +1,9 @@
-import React, { useRef, useContext, useEffect } from 'react';
+import React, { useRef, useContext } from 'react';
 import SocketContext from '../../contexts/socketContext';
 import { Formik, Field } from 'formik';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
-//import { useFormik } from 'formik';
-//import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-//import leoProfanity from 'leo-profanity';
-// import { useRollbar } from '@rollbar/react';
 import { useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';

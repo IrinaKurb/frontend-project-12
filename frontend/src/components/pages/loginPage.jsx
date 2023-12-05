@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import authImg from '../../assets/autImg.png';
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
-import { Button, Form, Alert } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
 import routes from '../../routes.js';
@@ -40,9 +40,9 @@ export const LoginPage = () => {
                   <Formik
                     validationSchema={valiationSchema}
                     initialValues={{ username: '', password: '' }}
-                    onSubmit={(values, { setSubmitting }) => {
+                    onSubmit={async (values, { setSubmitting }) => {
 
-                      axios.post(routes.loginApiPath(), values).then((response) => {
+                      await axios.post(routes.loginApiPath(), values).then((response) => {
                         const token = response.data.token;
                         const userName = response.data.username;
                         localStorage.setItem('token', JSON.stringify(token));
@@ -55,7 +55,7 @@ export const LoginPage = () => {
                           toast.error(t('unknownError'));
                           return;
                         }
-                        if (error.response?.status === 401) {
+                        if (error.response.status === 401) {
                           setIsValidForm(false);
                         } else {
                           toast.error(t('networkError'), {
@@ -89,7 +89,7 @@ export const LoginPage = () => {
                           <label htmlFor="username">{t('singUpPage.username')}</label>
                         </Form.Group>
 
-                        <Form.Group className="form-floating mb-4">
+                        <Form.Group className="form-floating mb-4" >
                           <Form.Control
                             type="password"
                             name="password"
@@ -105,9 +105,11 @@ export const LoginPage = () => {
                           {errors.password && touched.password ? (
                             <Form.Control.Feedback>{errors.password}</Form.Control.Feedback>
                           ) : null}
-                          <label htmlFor="password">{t('singUpPage.password')}</label>
+                          <label className='form-label' htmlFor="password">{t('singUpPage.password')}</label>
+                          <Form.Control.Feedback type="invalid" tooltip>
+                            {!isValidForm ? t('singUpPage.wrongCredentials') : null}
+                          </Form.Control.Feedback>
                         </Form.Group>
-
                         <Button
                           type="submit"
                           variant="outline-primary"
@@ -116,7 +118,6 @@ export const LoginPage = () => {
                         >
                           {t('singUpPage.login')}
                         </Button>
-                        {!isValidForm ? (<Alert variant={'danger'}>{t('singUpPage.wrongCredentials')}</Alert>) : null}
                         <ToastContainer />
                       </Form>
                     )}

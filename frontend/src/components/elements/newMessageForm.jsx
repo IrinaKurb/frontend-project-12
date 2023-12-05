@@ -37,9 +37,10 @@ const NewMessageForm = () => {
       initialValues={{ body: '' }}
       onSubmit={(values, { setSubmitting, resetForm }) => {
         if (values.body.length === 0) return;
+        const filter = require('leo-profanity');
 
         socket.timeout(1000).emit('newMessage',
-          { body: values.body, channelId: currentChannelId, username: currentUser },
+          { body: filter.clean(values.body), channelId: currentChannelId, username: currentUser },
           (err) => {
             if (err) {
               //console.log("can't find server");

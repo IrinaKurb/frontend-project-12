@@ -29,6 +29,8 @@ const AddNewChannelModal = ({ handleClose }) => {
 
     const [isActiveBtn, setIsActiveBtn] = useState(true);
 
+    const filter = require('leo-profanity');
+
     const notAddChannel = () => {
         toast.error(t('networkError'), {
             position: toast.POSITION.TOP_RIGHT,
@@ -55,7 +57,7 @@ const AddNewChannelModal = ({ handleClose }) => {
                     validateOnBlur={false}
                     onSubmit={(values, { setSubmitting }) => {
                         setSubmitting(false);
-                        socket.timeout(1000).emit('newChannel', { name: values.name }, (error, response) => {
+                        socket.timeout(1000).emit('newChannel', { name: filter.clean(values.name) }, (error, response) => {
                             if (error) {
                                 console.log('Add Channel Error!');
                                 setIsActiveBtn(false);
@@ -193,6 +195,8 @@ const RenameChannelModal = ({ handleClose }) => {
         });
     };
 
+    const filter = require('leo-profanity');
+
     useEffect(() => {
         setTimeout(() => inputRef.current.select());
     }, []);
@@ -220,7 +224,7 @@ const RenameChannelModal = ({ handleClose }) => {
                         setSubmitting(false);
                         console.log('Click rename! ' + JSON.stringify(values));
 
-                        socket.timeout(1000).emit('renameChannel', { id: values.id, name: values.name }, (error) => {
+                        socket.timeout(1000).emit('renameChannel', { id: values.id, name: filter.clean(values.name) }, (error) => {
                             if (error) {
                                 setIsActiveBtn(false);
                                 notRenameChannel();

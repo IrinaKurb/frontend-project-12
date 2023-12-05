@@ -11,7 +11,7 @@ const Navbar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { updateToken, token } = useContext(TokenContext);
-  console.log(token);
+  console.log(token, updateToken);
 
   const dispatch = useDispatch();
 

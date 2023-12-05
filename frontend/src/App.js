@@ -17,6 +17,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     initI18next();
+    const filter = require('leo-profanity');
+    filter.loadDictionary('ru');
+    
     this.updateToken = () => {
       this.setState(() => ({
         token: JSON.parse(localStorage.getItem('token'))

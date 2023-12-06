@@ -29,7 +29,7 @@ const Navbar = () => {
       {
         <BootstrapNavbar bg="white" expand="lg" className="shadow-sm">
           <div className="container">
-            <BootstrapNavbar.Brand as={Link} to={routes.loginPagePath()}>{t('chatPage.chatName')}</BootstrapNavbar.Brand>
+            <BootstrapNavbar.Brand as={Link} to='/'>{t('chatPage.chatName')}</BootstrapNavbar.Brand>
             {!!token && <Button onClick={() => handleLogOut()}>{t('chatPage.exit')}</Button>}
           </div>
         </BootstrapNavbar>

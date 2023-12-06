@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import authImg from '../../assets/autImg.png';
 import { Formik } from 'formik';
@@ -14,6 +14,7 @@ import { toast, ToastContainer } from 'react-toastify';
 export const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const inputRef = useRef();
   const [isValidForm, setIsValidForm] = useState(true);
   const [isActiveBtn, setIsActiveBtn] = useState(true);
 
@@ -21,6 +22,10 @@ export const LoginPage = () => {
     username: Yup.string().required(t('singUpPage.requiredField')),
     password: Yup.string().required(t('singUpPage.requiredField')),
   });
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   return (
     <TokenContext.Consumer>
@@ -55,8 +60,9 @@ export const LoginPage = () => {
                           toast.error(t('unknownError'));
                           return;
                         }
-                        if (error.response.status === 401) {
+                        if (error.response?.status === 401) {
                           setIsValidForm(false);
+                          inputRef.current.select();
                         } else {
                           toast.error(t('networkError'), {
                             position: toast.POSITION.TOP_RIGHT,
@@ -81,6 +87,7 @@ export const LoginPage = () => {
                             value={values.username}
                             onChange={handleChange}
                             isInvalid={!isValidForm}
+                            ref={inputRef}
                             required
                           />
                           {errors.username && touched.username ? (
@@ -100,15 +107,14 @@ export const LoginPage = () => {
                             value={values.password}
                             onChange={handleChange}
                             isInvalid={!isValidForm}
+                            ref={inputRef}
                             required
                           />
                           {errors.password && touched.password ? (
                             <Form.Control.Feedback>{errors.password}</Form.Control.Feedback>
                           ) : null}
                           <label className='form-label' htmlFor="password">{t('singUpPage.password')}</label>
-                          <Form.Control.Feedback type="invalid" tooltip>
-                            {!isValidForm ? t('singUpPage.wrongCredentials') : null}
-                          </Form.Control.Feedback>
+                          {!isValidForm && <Form.Control.Feedback type="invalid" tooltip>{t('singUpPage.wrongCredentials')}</Form.Control.Feedback>}
                         </Form.Group>
                         <Button
                           type="submit"

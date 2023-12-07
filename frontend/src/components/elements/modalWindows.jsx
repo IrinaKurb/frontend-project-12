@@ -57,7 +57,7 @@ const AddNewChannelModal = ({ handleClose }) => {
                     validateOnBlur={false}
                     onSubmit={(values, { setSubmitting }) => {
                         setSubmitting(false);
-                        socket.timeout(1000).emit('newChannel', { name: filter.clean(values.name) }, (error, response) => {
+                        socket.timeout(5000).emit('newChannel', { name: filter.clean(values.name) }, (error, response) => {
                             if (error) {
                                 setIsActiveBtn(false);
                                 notAddChannel();
@@ -127,7 +127,7 @@ const RemoveChannelModal = ({ handleClose }) => {
     };
 
     const handleRemove = () => {
-        socket.timeout(1000).emit('removeChannel', { id: currentChannel.id }, (error) => {
+        socket.timeout(5000).emit('removeChannel', { id: currentChannel.id }, (error) => {
             if (error) {
                 notRemoveChannel();
                 setIsActiveBtn(false);
@@ -219,7 +219,7 @@ const RenameChannelModal = ({ handleClose }) => {
                     onSubmit={(values, { setSubmitting }) => {
                         setSubmitting(false);
 
-                        socket.timeout(1000).emit('renameChannel', { id: values.id, name: filter.clean(values.name) }, (error) => {
+                        socket.timeout(5000).emit('renameChannel', { id: values.id, name: filter.clean(values.name) }, (error) => {
                             if (error) {
                                 setIsActiveBtn(false);
                                 notRenameChannel();

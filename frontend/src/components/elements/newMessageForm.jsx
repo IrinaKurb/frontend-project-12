@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useState } from 'react';
 import SocketContext from '../../contexts/socketContext';
 import { Formik, Field } from 'formik';
 import { Form, InputGroup, Button } from 'react-bootstrap';
@@ -14,7 +14,7 @@ const NewMessageForm = () => {
   const formikRef = useRef(null);
   const currentUser = JSON.parse(localStorage.getItem('userName'));
   const currentChannelId = useSelector((state) => state.channelsStore.currentChannelId);
-  let isDisabled = false;
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const notSendMessage = () => {
     toast.error(t('chatPage.messagesForUser.messageNotSend'), {
@@ -29,15 +29,15 @@ const NewMessageForm = () => {
         if (values.body.length === 0) return;
         const filter = require('leo-profanity');
 
-        socket.timeout(1000).emit('newMessage',
+        socket.timeout(5000).emit('newMessage',
           { body: filter.clean(values.body), channelId: currentChannelId, username: currentUser },
           (err) => {
             if (err) {
-              isDisabled = true;
+              setIsDisabled(true);
               resetForm();
               notSendMessage();
             } else {
-              isDisabled = '';
+              setIsDisabled(false);
               setSubmitting(false);
               resetForm();
               formikRef.current.focus();

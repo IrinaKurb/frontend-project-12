@@ -19,6 +19,7 @@ export default {
                 messages_few: "{{count}} сообщения",
                 messages_many: "{{count}} сообщений",
                 inputMessage: "Введите сообщение...",
+                ariaLabelMsg: "Новое сообщение",
                 exit: "Выйти",
                 chatName: "Hexlet Chat",
                 delete: "Удалить",

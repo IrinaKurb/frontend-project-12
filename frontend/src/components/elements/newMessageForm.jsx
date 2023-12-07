@@ -53,7 +53,7 @@ const NewMessageForm = () => {
               type="body"
               name="body"
               className="form-control border-0 p-0 ps-2"
-              aria-label={t('chatPage.inputMessage')}
+              aria-label={t('chatPage.ariaLabelMsg')}
               placeholder={t('chatPage.inputMessage')}
               disabled={isDisabled}
             >

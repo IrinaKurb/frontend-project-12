@@ -45,9 +45,9 @@ export const LoginPage = () => {
                   <Formik
                     validationSchema={valiationSchema}
                     initialValues={{ username: '', password: '' }}
-                    onSubmit={async (values, { setSubmitting }) => {
+                    onSubmit={(values, { setSubmitting }) => {
 
-                      await axios.post(routes.loginApiPath(), values).then((response) => {
+                      axios.post(routes.loginApiPath(), values).then((response) => {
                         const token = response.data.token;
                         const userName = response.data.username;
                         localStorage.setItem('token', JSON.stringify(token));

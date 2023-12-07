@@ -23,12 +23,12 @@ class App extends React.Component {
 
     this.updateToken = () => {
       this.setState(() => ({
-        token: JSON.parse(localStorage.getItem('token'))
+        token: localStorage.getItem('token') !== undefined ? JSON.parse(localStorage.getItem('token')) : ""
       }));
     };
 
     this.state = {
-      token: JSON.parse(localStorage.getItem('token')),
+      token: null,
       updateToken: this.updateToken,
     };
   }

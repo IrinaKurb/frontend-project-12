@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 const Navbar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { updateToken, token } = useContext(TokenContext);
+  const { token, updateToken } = useContext(TokenContext);
 
   const dispatch = useDispatch();
 

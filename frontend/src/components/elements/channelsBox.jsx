@@ -25,7 +25,7 @@ const Channel = ({ channelName, isRemovable, isCurrent, handleRemove, handleChoo
                 {isRemovable ? (
                     <>
                         <Dropdown.Toggle split className="flex-grow-0" variant={isChoosenBtn}>
-                            <span className="visually-hidden">{'Channel menu'}</span>
+                            <span className="visually-hidden">{t('channelsInf.handleChannel')}</span>
                         </Dropdown.Toggle>
 
                         < Dropdown.Menu >
@@ -74,7 +74,7 @@ const ChannelsBox = () => {
                     onClick={addNewChannel}
                 >
                     <PlusSquare size={20} />
-                    <span className="visually-hidden">+</span>
+                    <span className="visually-hidden" >+</span>
                 </Button>
             </div>
             <ul

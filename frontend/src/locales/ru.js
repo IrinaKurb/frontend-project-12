@@ -42,18 +42,22 @@ export default {
                     minPasswordLength: 'Не менее 6 символов',
                     maxLength: 'От 3 до 20 символов',
                     minLength: 'От 3 до 20 символов',
-                    required: 'Обязательное поле', 
+                    required: 'Обязательное поле',
                 },
             },
-            modalWindow: {
+            channelsInf: {
+                channelName: 'Имя канала',
+                handleChannel: 'Управление каналом',
                 addChannel: 'Добавить канал',
+            },
+            modalWindow: {
                 reset: 'Отменить',
                 send: 'Отправить',
                 channelCreated: 'Канал создан',
                 removeChannel: 'Удалить канал',
                 conformation: 'Уверены?',
-                delete: 'Удалить', 
-                channelRemoved: 'Канал удален',
+                delete: 'Удалить',
+                channelRemoved: 'Канал удалён',
                 renameChannel: 'Переименовать канал',
                 channelRenamed: 'Канал переименован',
                 errors: {

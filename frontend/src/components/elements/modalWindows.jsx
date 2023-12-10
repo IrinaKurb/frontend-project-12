@@ -81,6 +81,7 @@ const AddNewChannelModal = ({ handleClose }) => {
                                     onChange={handleChange}
                                     isInvalid={errors.name}
                                 />
+                                <label className="visually-hidden" htmlFor="name">{t('channelsInf.channelName')}</label>
                                 {errors.name ? (
                                     <Form.Control.Feedback type='invalid'>{t(errors.name)}</Form.Control.Feedback>
                                 ) : null}
@@ -234,7 +235,7 @@ const RenameChannelModal = ({ handleClose }) => {
                         <Form onSubmit={handleSubmit}>
                             <Form.Group>
                                 <Form.Control
-                                    type="text"
+                                    id="name"
                                     name="name"
                                     className="mb-2"
                                     ref={inputRef}
@@ -242,6 +243,7 @@ const RenameChannelModal = ({ handleClose }) => {
                                     onChange={handleChange}
                                     isInvalid={errors.name}
                                 />
+                                <label className="visually-hidden" htmlFor="name">{t('channelsInf.channelName')}</label>
                                 {errors.name ? (
                                     <Form.Control.Feedback type='invalid'>{t(errors.name)}</Form.Control.Feedback>
                                 ) : null}

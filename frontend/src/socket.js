@@ -7,7 +7,8 @@ import { toast } from "react-toastify";
 const { dispatch } = store;
 
 const initSocket = (i18n) => {
-    const socket = io('http://localhost:5001');
+    const socket = io();
+
     const { t } = i18n();
 
     socket.on('connect', () => {

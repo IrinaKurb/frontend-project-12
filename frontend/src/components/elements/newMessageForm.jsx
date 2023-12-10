@@ -1,6 +1,6 @@
-import React, { useRef, useContext, useState } from 'react';
+import React, { useRef, useState, useContext, useEffect } from 'react';
 import SocketContext from '../../contexts/socketContext';
-import { Formik, Field } from 'formik';
+import { useFormik } from 'formik';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const NewMessageForm = () => {
   const { t } = useTranslation();
-  const socket = useContext(SocketContext);
+  const socket  = useContext(SocketContext);
   const formikRef = useRef(null);
   const currentUser = JSON.parse(localStorage.getItem('userName'));
   const currentChannelId = useSelector((state) => state.channelsStore.currentChannelId);
@@ -22,50 +22,60 @@ const NewMessageForm = () => {
     });
   };
 
-  return (
-    <Formik
-      initialValues={{ body: '' }}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        if (values.body.length === 0) return;
-        const filter = require('leo-profanity');
+  const formik = useFormik({
+    initialValues: { body: '' },
+    onSubmit: async ({ body }) => {
+      
+      if (body.length === 0) return;
+      const filter = require('leo-profanity');
 
-        socket.timeout(5000).emit('newMessage',
-          { body: filter.clean(values.body), channelId: currentChannelId, username: currentUser },
-          (err) => {
-            if (err) {
-              setIsDisabled(true);
-              resetForm();
-              notSendMessage();
-            } else {
-              setIsDisabled(false);
-              setSubmitting(false);
-              resetForm();
-              formikRef.current.focus();
-            }
-          });
-      }}>
-      {({ handleSubmit }) => (
-        <Form noValidate className="py-1 border rounded-2" onSubmit={handleSubmit}>
-          <InputGroup>
-            <Field
-              innerRef={formikRef}
-              autoFocus={true}
-              type="body"
-              name="body"
-              className="form-control border-0 p-0 ps-2"
-              aria-label={t('chatPage.ariaLabelMsg')}
-              placeholder={t('chatPage.inputMessage')}
-              disabled={isDisabled}
-            >
-            </Field>
-            <Button variant="group-vertical" type="submit" disabled={isDisabled}>
-              <ArrowRightSquare size={20} />
-              <span className="visually-hidden"></span>
-            </Button>
-          </InputGroup>
-        </Form>
-      )}
-    </Formik>
+      const message = { body: filter.clean(body), channelId: currentChannelId, username: currentUser };
+      
+      socket.timeout(5000).emit('newMessage',
+        message,
+        (err) => {
+          if (err) {
+            setIsDisabled(true);
+            notSendMessage();
+          } else {
+            setIsDisabled(false);
+            formikRef.current.focus();
+          }
+        });
+      formik.setSubmitting(false);
+      formik.resetForm();
+    }
+  });
+ 
+  useEffect(() => {
+    formikRef.current.focus();
+  }, [formik.isSubmitting]);
+
+  useEffect(() => {
+    
+  }, [isDisabled]);
+
+  return (
+    <Form noValidate className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>
+      <InputGroup>
+        <Form.Control
+          ref={formikRef}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.body}
+          name="body"
+          className="form-control border-0 p-0 ps-2"
+          aria-label={t('chatPage.ariaLabelMsg')}
+          placeholder={t('chatPage.inputMessage')}
+          disabled={formik.isSubmitting}
+        >
+        </Form.Control>
+        <Button variant="group-vertical" type="submit" disabled={isDisabled}>
+          <ArrowRightSquare size={20} />
+          <span className="visually-hidden"></span>
+        </Button>
+      </InputGroup>
+    </Form>
   );
 };
 

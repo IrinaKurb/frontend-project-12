@@ -1,11 +1,19 @@
-import React, { useRef, useState, useContext, useEffect } from 'react';
-import SocketContext from '../../contexts/socketContext';
+/* eslint-disable functional/no-conditional-statement */
+/* eslint-disable global-require */
+/* eslint-disable functional/no-expression-statement */
+import React, {
+  useRef,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import { useFormik } from 'formik';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
+import SocketContext from '../../contexts/socketContext';
 import 'react-toastify/dist/ReactToastify.css';
 
 const NewMessageForm = () => {
@@ -26,21 +34,24 @@ const NewMessageForm = () => {
     initialValues: { body: '' },
     onSubmit: ({ body }) => {
       formik.setSubmitting(false);
+      // eslint-disable-next-line functional/no-conditional-statement
       if (body.length === 0) return;
       const filter = require('leo-profanity');
-      const message = { body: filter.clean(body), channelId: currentChannelId, username: currentUser };
+      const message = {
+        body: filter.clean(body),
+        channelId: currentChannelId,
+        username: currentUser,
+      };
       socket.timeout(3000).emit('newMessage', message, (err, response) => {
         console.log(err, response);
-          if (err) {
-            console.log('I am in error')
-            setIsDisabled(true);
-            notSendMessage();
-          } else {
-            console.log('It is OK!')
-            formik.resetForm();
-            setIsDisabled(false);
-          }
-        });
+        if (err) {
+          setIsDisabled(true);
+          notSendMessage();
+        } else {
+          formik.resetForm();
+          setIsDisabled(false);
+        }
+      });
       formik.setSubmitting(false);
       formikRef.current.focus();
     },
@@ -50,9 +61,6 @@ const NewMessageForm = () => {
   useEffect(() => {
     formikRef.current.focus();
   }, [isDisabled]);
-
-
-  //const disabled = isDisabled ? 'disabled' : null;
 
   return (
     <Form noValidate className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>
@@ -66,12 +74,11 @@ const NewMessageForm = () => {
           className="form-control border-0 p-0 ps-2"
           aria-label={t('chatPage.ariaLabelMsg')}
           placeholder={t('chatPage.inputMessage')}
-          disabled={isDisabled ? "disabled" : null}
-        >
-        </Form.Control>
-        <Button variant="group-vertical" type="submit" disabled={isDisabled ? "disabled" : null}>
+          disabled={isDisabled ? 'disabled' : null}
+        />
+        <Button variant="group-vertical" type="submit" disabled={isDisabled ? 'disabled' : null}>
           <ArrowRightSquare size={20} />
-          <span className="visually-hidden"></span>
+          <span className="visually-hidden" />
         </Button>
       </InputGroup>
     </Form>

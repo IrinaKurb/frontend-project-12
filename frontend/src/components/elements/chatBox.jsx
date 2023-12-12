@@ -1,21 +1,18 @@
+/* eslint-disable functional/no-expression-statement */
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { animateScroll } from 'react-scroll';
-//import { useTranslation } from 'react-i18next';
-import NewMessageForm from './newMessageForm.jsx';
 import { useTranslation } from 'react-i18next';
+import NewMessageForm from './newMessageForm.jsx';
 import { getMessagesForCurrentChannel, getCurrentChannel } from '../../selectors';
-//import { useDispatch } from 'react-redux';
 
-const Message = ({ user, textMessage }) => {
-  return (
-    <div className="text-break mb-2">
-      <b>{user}</b>
-      {': '}
-      {textMessage}
-    </div>
-  )
-};
+const Message = ({ user, textMessage }) => (
+  <div className="text-break mb-2">
+    <b>{user}</b>
+    {': '}
+    {textMessage}
+  </div>
+);
 
 const ChatBox = () => {
   const { t } = useTranslation();

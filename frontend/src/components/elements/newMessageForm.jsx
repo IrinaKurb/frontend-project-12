@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const NewMessageForm = () => {
   const { t } = useTranslation();
-  const socket  = useContext(SocketContext);
+  const socket = useContext(SocketContext);
   const formikRef = useRef(null);
   const currentUser = JSON.parse(localStorage.getItem('userName'));
   const currentChannelId = useSelector((state) => state.channelsStore.currentChannelId);
@@ -24,36 +24,35 @@ const NewMessageForm = () => {
 
   const formik = useFormik({
     initialValues: { body: '' },
-    onSubmit: async ({ body }) => {
-      
+    onSubmit: ({ body }) => {
+      formik.setSubmitting(false);
       if (body.length === 0) return;
       const filter = require('leo-profanity');
-
       const message = { body: filter.clean(body), channelId: currentChannelId, username: currentUser };
-      
-      socket.timeout(5000).emit('newMessage',
-        message,
-        (err) => {
+      socket.timeout(3000).emit('newMessage', message, (err, response) => {
+        console.log(err, response);
           if (err) {
+            console.log('I am in error')
             setIsDisabled(true);
             notSendMessage();
           } else {
+            console.log('It is OK!')
+            formik.resetForm();
             setIsDisabled(false);
-            formikRef.current.focus();
           }
         });
       formik.setSubmitting(false);
-      formik.resetForm();
-    }
+      formikRef.current.focus();
+    },
+    validateOnBlur: false,
   });
- 
-  useEffect(() => {
-    formikRef.current.focus();
-  }, [formik.isSubmitting]);
 
   useEffect(() => {
-    
+    formikRef.current.focus();
   }, [isDisabled]);
+
+
+  //const disabled = isDisabled ? 'disabled' : null;
 
   return (
     <Form noValidate className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>
@@ -67,10 +66,10 @@ const NewMessageForm = () => {
           className="form-control border-0 p-0 ps-2"
           aria-label={t('chatPage.ariaLabelMsg')}
           placeholder={t('chatPage.inputMessage')}
-          disabled={formik.isSubmitting}
+          disabled={isDisabled ? "disabled" : null}
         >
         </Form.Control>
-        <Button variant="group-vertical" type="submit" disabled={isDisabled}>
+        <Button variant="group-vertical" type="submit" disabled={isDisabled ? "disabled" : null}>
           <ArrowRightSquare size={20} />
           <span className="visually-hidden"></span>
         </Button>

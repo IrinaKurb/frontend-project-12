@@ -40,7 +40,7 @@ const AddNewChannelModal = ({ handleClose }) => {
     return (
         <>
             <Modal.Header>
-                <Modal.Title>{t('modalWindow.addChannel')}</Modal.Title>
+                <Modal.Title>{t('channelsInf.addChannel')}</Modal.Title>
                 <Button
                     variant="close"
                     type="button"

@@ -21,7 +21,7 @@ export const RegistrationPage = () => {
   const [isActiveBtn, setIsActiveBtn] = useState(true);
   const inputRef = useRef();
   const navigate = useNavigate();
-  const { updateToken } = useContext(TokenContext);
+  const { setToken } = useContext(TokenContext);
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -76,7 +76,7 @@ export const RegistrationPage = () => {
                           localStorage.setItem('userName', JSON.stringify(userName));
                           setRegistrationFailed(false);
                           setIsActiveBtn(false);
-                          updateToken();
+                          setToken(token);
                           navigate(routes.chatPagePath());
                         })
                       setIsActiveBtn(true);

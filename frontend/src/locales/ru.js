@@ -45,7 +45,7 @@ export default {
                     required: 'Обязательное поле',
                 },
             },
-            channelsInf: {
+            channelsInf: { 
                 channelName: 'Имя канала',
                 handleChannel: 'Управление каналом',
                 addChannel: 'Добавить канал',

@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 const Navbar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { token, updateToken } = useContext(TokenContext);
+  const { token, setToken } = useContext(TokenContext);
 
   const dispatch = useDispatch();
 
@@ -18,7 +18,7 @@ const Navbar = () => {
     navigate(routes.loginPagePath());
     const emptyToken = '';
     const emptyUser = '';
-    updateToken();
+    setToken(emptyToken);
   
     localStorage.setItem('token', JSON.stringify(emptyToken));
     localStorage.setItem('userName', JSON.stringify(emptyUser));

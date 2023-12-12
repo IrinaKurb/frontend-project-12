@@ -3,6 +3,7 @@ import routes from '../../routes';
 import TokenContext from '../../contexts/tokenContext';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import { LoginPage } from './loginPage';
 import ChannelsBox from '../elements/channelsBox';
 import ChatBox from '../elements/chatBox';
 import axios from 'axios';
@@ -65,9 +66,9 @@ const ChatPage = () => {
           </div>
         </>
       )
-        : null};
+        : null}
     </>
-  ) : null
+  ) : <LoginPage />
 }
 
 export default ChatPage;

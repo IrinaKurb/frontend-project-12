@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import initI18next from './init18next';
@@ -23,52 +23,25 @@ const App = () => {
 
   const state = { token, setToken };
 
+  const memoState = useMemo(() => state, [state]);
+
   return (
     <Provider store={store}>
-      <TokenContext.Provider value={state}>
+      <TokenContext.Provider value={memoState}>
         <BrowserRouter>
           <div className="d-flex flex-column h-100">
             <Navbar />
-            <Routes >
+            <Routes>
               <Route path={routes.chatPagePath()} element={<ChatPage />} />
               <Route path={routes.loginPagePath()} element={<LoginPage />} />
               <Route path={routes.signupPagePath()} element={<RegistrationPage />} />
-              <Route path='*' element={<NotFoundPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </div>
         </BrowserRouter>
       </TokenContext.Provider>
     </Provider>
-  )
+  );
 }
-
-/*
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    initI18next();
-    const filter = require('leo-profanity');
-    filter.add(filter.getDictionary('en'))
-    filter.add(filter.getDictionary('ru'))
-
-    this.updateToken = () => {
-      this.setState(() => ({
-        token: localStorage.getItem('token') !== undefined ? JSON.parse(localStorage.getItem('token')) : ""
-      }));
-    };
-
-    this.state = {
-      token: null,
-      updateToken: this.updateToken,
-    };
-  }
-
-  render() {
-    return (
-      
-    )
-  }
-}
-*/
 
 export default App;

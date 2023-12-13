@@ -76,7 +76,8 @@ const RegistrationPage = () => {
                         username: values.username,
                         password: values.password,
                       })
-                        .then(({ data }) => {
+                        .then((response) => {
+                          const { data } = response;
                           const { token, username } = data;
                           localStorage.setItem('token', JSON.stringify(token));
                           localStorage.setItem('userName', JSON.stringify(username));

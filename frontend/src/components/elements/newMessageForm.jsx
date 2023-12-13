@@ -28,10 +28,15 @@ const NewMessageForm = () => {
     });
   };
 
+  socket.on('connect', () => {
+    setIsDisabled(false);
+  });
+
   const formik = useFormik({
     initialValues: { body: '' },
     onSubmit: ({ body }) => {
       formik.setSubmitting(false);
+      setIsDisabled(true);
       if (body.length === 0) return;
       const filter = require('leo-profanity');
       const message = {
@@ -39,17 +44,14 @@ const NewMessageForm = () => {
         channelId: currentChannelId,
         username: currentUser,
       };
-      socket.timeout(3000).emit('newMessage', message, (err, response) => {
-        console.log(err, response);
+      socket.volatile.timeout(1000).emit('newMessage', message, (err) => {
         if (err) {
-          setIsDisabled(true);
           notSendMessage();
         } else {
-          formik.resetForm();
           setIsDisabled(false);
+          formik.resetForm();
         }
       });
-      formik.setSubmitting(false);
       formikRef.current.focus();
     },
     validateOnBlur: false,
@@ -57,7 +59,7 @@ const NewMessageForm = () => {
 
   useEffect(() => {
     formikRef.current.focus();
-  }, [formik.isSubmitting, currentChannelId]);
+  }, [isDisabled, currentChannelId]);
 
   return (
     <Form noValidate className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>

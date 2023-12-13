@@ -1,6 +1,7 @@
-.center-align {
-  display: flex;
+.rounded-circle {
+  border-radius: 20%!important;
   justify-content: center;
-  margin-left: auto;
-  margin-right: auto
+  height: 100%;
+  width: 100%;
+  object-fit: cover
 }

@@ -12,6 +12,7 @@ import routes from './routes.js';
 import TokenContext from './contexts/tokenContext.jsx';
 import store from './store/index.js';
 import Navbar from './components/elements/navigationPannel.jsx';
+import './App.css';
 
 const App = () => {
   initI18next();

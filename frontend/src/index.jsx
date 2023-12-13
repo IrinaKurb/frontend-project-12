@@ -8,15 +8,14 @@ import initSocket from './socket';
 import initI18next from './init18next';
 import SocketContext from './contexts/socketContext';
 
-
 const app = async () => {
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        const socket = initSocket(initI18next);
-        root.render(
-                <SocketContext.Provider value={socket}>
-                        <App />
-                </SocketContext.Provider>
-        );
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  const socket = initSocket(initI18next);
+  root.render(
+    <SocketContext.Provider value={socket}>
+      <App />
+    </SocketContext.Provider>,
+  );
 };
 
 // If you want to start measuring performance in your app, pass a function

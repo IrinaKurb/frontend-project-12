@@ -1,17 +1,21 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+} from 'react';
 import { useTranslation } from 'react-i18next';
-import authImg from '../../assets/autImg.png';
 import { Formik } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
-import routes from '../../routes.js';
-import { useNavigate } from "react-router-dom";
-import TokenContext from '../../contexts/tokenContext';
 import { toast, ToastContainer } from 'react-toastify';
+import authImg from '../../assets/autImg.png';
+import routes from '../../routes.js';
+import TokenContext from '../../contexts/tokenContext';
 
-export const LoginPage = () => {
+const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const inputRef = useRef();
@@ -44,8 +48,10 @@ export const LoginPage = () => {
               <Formik
                 validationSchema={valiationSchema}
                 initialValues={{ username: '', password: '' }}
-                onSubmit={(values, { setSubmitting }) => {
-
+                onSubmit={(
+                  values,
+                  { setSubmitting },
+                ) => {
                   axios.post(routes.loginApiPath(), values).then((response) => {
                     const upDateToken = response.data.token;
                     const userName = response.data.username;
@@ -73,7 +79,13 @@ export const LoginPage = () => {
                   setIsActiveBtn(true);
                 }}
               >
-                {({ touched, errors, handleChange, handleSubmit, values }) => (
+                {({
+                  touched,
+                  errors,
+                  handleChange,
+                  handleSubmit,
+                  values,
+                }) => (
                   <Form className="col-12 col-md-6 mt-3 mt-mb-0" onSubmit={handleSubmit}>
                     <h1 className="text-center mb-4">{t('singUpPage.login')}</h1>
                     <Form.Group className="form-floating mb-3">
@@ -95,7 +107,7 @@ export const LoginPage = () => {
                       <label htmlFor="username">{t('singUpPage.username')}</label>
                     </Form.Group>
 
-                    <Form.Group className="form-floating mb-4" >
+                    <Form.Group className="form-floating mb-4">
                       <Form.Control
                         type="password"
                         name="password"
@@ -111,14 +123,14 @@ export const LoginPage = () => {
                       {errors.password && touched.password ? (
                         <Form.Control.Feedback>{errors.password}</Form.Control.Feedback>
                       ) : null}
-                      <label className='form-label' htmlFor="password">{t('singUpPage.password')}</label>
+                      <label className="form-label" htmlFor="password">{t('singUpPage.password')}</label>
                       {!isValidForm && <Form.Control.Feedback type="invalid" tooltip>{t('singUpPage.wrongCredentials')}</Form.Control.Feedback>}
                     </Form.Group>
                     <Button
                       type="submit"
                       variant="outline-primary"
                       className="w-100 mb-3"
-                      disabled={!isActiveBtn ? "disabled" : null}
+                      disabled={!isActiveBtn ? 'disabled' : null}
                     >
                       {t('singUpPage.login')}
                     </Button>
@@ -136,6 +148,8 @@ export const LoginPage = () => {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
+
+export default LoginPage;

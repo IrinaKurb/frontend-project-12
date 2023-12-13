@@ -35,7 +35,7 @@ export default {
         userName: 'Имя пользователя',
         password: 'Пароль',
         confPassword: 'Подтвердите пароль',
-        regisration: 'Зарегистрироваться',        
+        regisration: 'Зарегистрироваться',
         errors: {
           samePassword: 'Пароли должны совпадать',
           sameUser: 'Такой пользователь уже существует',
@@ -68,5 +68,5 @@ export default {
         },
       },
     },
-  }
+  },
 };

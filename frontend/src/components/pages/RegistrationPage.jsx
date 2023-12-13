@@ -1,21 +1,23 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+} from 'react';
 import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-// import { useRollbar } from '@rollbar/react';
 import { toast, ToastContainer } from 'react-toastify';
 
-//import { useAuth } from '../hooks/index.js';
 import routes from '../../routes.js';
 
 import registrationImg from '../../assets/registrationImg.png';
 import TokenContext from '../../contexts/tokenContext.jsx';
 
-
-export const RegistrationPage = () => {
+const RegistrationPage = () => {
   const { t } = useTranslation();
   const [registrationFailed, setRegistrationFailed] = useState(false);
   const [isActiveBtn, setIsActiveBtn] = useState(true);
@@ -40,8 +42,11 @@ export const RegistrationPage = () => {
       .min(6, 'registrationPage.errors.minPasswordLength'),
     confirmPassword: Yup
       .string()
-      .test('registrationPage.confPassword', 'registrationPage.errors.samePassword',
-        (value, context) => value === context.parent.password),
+      .test(
+        'registrationPage.confPassword',
+        'registrationPage.errors.samePassword',
+        (value, context) => value === context.parent.password,
+      ),
   });
 
   return (
@@ -67,38 +72,43 @@ export const RegistrationPage = () => {
                 onSubmit={(values) => {
                   const makeRequest = async () => {
                     try {
-                      await axios.post(routes.signupApiPath(),
-                        { username: values.username, password: values.password })
-                        .then((response) => {
-                          const token = response.data.token;
-                          const userName = response.data.username;
+                      await axios.post(routes.signupApiPath(), {
+                        username: values.username,
+                        password: values.password,
+                      })
+                        .then(({ data }) => {
+                          const { token, username } = data;
                           localStorage.setItem('token', JSON.stringify(token));
-                          localStorage.setItem('userName', JSON.stringify(userName));
+                          localStorage.setItem('userName', JSON.stringify(username));
                           setRegistrationFailed(false);
                           setIsActiveBtn(false);
                           setToken(token);
                           navigate(routes.chatPagePath());
-                        })
+                        });
                       setIsActiveBtn(true);
                     } catch (err) {
                       if (err.response.data.statusCode === 409) {
                         setRegistrationFailed(true);
-                      }
-                      else if (!err.isAxiosError) {
+                      } else if (!err.isAxiosError) {
                         toast.error(t('unknownError'));
-                        return;
                       } else {
                         toast.error(t('networkError'), {
                           position: toast.POSITION.TOP_RIGHT,
                         });
                       }
                     }
-                  }
+                  };
                   makeRequest();
-                }
-                }
+                }}
               >
-                {({ touched, handleBlur, handleChange, handleSubmit, errors, values }) => (
+                {({
+                  touched,
+                  handleBlur,
+                  handleChange,
+                  handleSubmit,
+                  errors,
+                  values,
+                }) => (
                   <Form onSubmit={handleSubmit} className="w-50">
                     <h1 className="text-center mb-4">{t('registrationPage.title')}</h1>
                     <Form.Group className="form-floating mb-3">
@@ -166,8 +176,9 @@ export const RegistrationPage = () => {
                       type="submit"
                       variant="outline-primary"
                       className="w-100"
-                      disabled={!isActiveBtn ? "disabled" : null}
-                    >{t('registrationPage.regisration')}
+                      disabled={!isActiveBtn ? 'disabled' : null}
+                    >
+                      {t('registrationPage.regisration')}
                     </Button>
                   </Form>
                 )}
@@ -181,3 +192,4 @@ export const RegistrationPage = () => {
   );
 };
 
+export default RegistrationPage;

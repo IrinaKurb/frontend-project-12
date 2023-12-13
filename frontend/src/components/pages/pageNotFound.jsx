@@ -2,8 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import notFoundImg from '../../assets/404.png';
 
-
-export const NotFoundPage = () => {
+const NotFoundPage = () => {
   const { t } = useTranslation();
   return (
     <div>
@@ -14,3 +13,5 @@ export const NotFoundPage = () => {
     </div>
   );
 };
+
+export default NotFoundPage;

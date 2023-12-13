@@ -1,6 +1,3 @@
-/* eslint-disable functional/no-conditional-statement */
-/* eslint-disable global-require */
-/* eslint-disable functional/no-expression-statement */
 import React, {
   useRef,
   useState,
@@ -12,6 +9,7 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import require from 'leo-profanity';
 import { toast } from 'react-toastify';
 import SocketContext from '../../contexts/socketContext';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,7 +32,6 @@ const NewMessageForm = () => {
     initialValues: { body: '' },
     onSubmit: ({ body }) => {
       formik.setSubmitting(false);
-      // eslint-disable-next-line functional/no-conditional-statement
       if (body.length === 0) return;
       const filter = require('leo-profanity');
       const message = {
@@ -60,7 +57,7 @@ const NewMessageForm = () => {
 
   useEffect(() => {
     formikRef.current.focus();
-  }, [isDisabled]);
+  }, [formik.isSubmitting, currentChannelId]);
 
   return (
     <Form noValidate className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>

@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-expression-statement */
 import React, { useContext } from 'react';
 import { Button, Navbar as BootstrapNavbar } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';

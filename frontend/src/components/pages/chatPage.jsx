@@ -1,20 +1,25 @@
-import { React, useEffect, useContext, useState } from "react";
-import routes from "../../routes";
-import TokenContext from "../../contexts/tokenContext";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { LoginPage } from "./loginPage";
-import ChannelsBox from "../elements/channelsBox";
-import ChatBox from "../elements/chatBox";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import {
+  React,
+  useEffect,
+  useContext,
+  useState,
+} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import routes from '../../routes';
+import TokenContext from '../../contexts/tokenContext';
+import LoginPage from './loginPage';
+import ChannelsBox from '../elements/channelsBox';
+import ChatBox from '../elements/chatBox';
 import {
   addInitialChannel,
   setCurrentChannelId,
-} from "../../store/channelSlice";
-import { addInitialMessages } from "../../store/messageSlice";
-import ModalWindow from "../elements/modalWindows";
-import { toast } from "react-toastify";
+} from '../../store/channelSlice';
+import { addInitialMessages } from '../../store/messageSlice';
+import ModalWindow from '../elements/modalWindows';
 
 const ChatPage = () => {
   const { t } = useTranslation();
@@ -38,10 +43,9 @@ const ChatPage = () => {
         dispatch(addInitialMessages(messages));
       } catch (error) {
         if (!error.isAxiosError) {
-          toast.error(t("unknownError"));
-          return;
+          toast.error(t('unknownError'));
         } else {
-          toast.error(t("networkError"), {
+          toast.error(t('networkError'), {
             position: toast.POSITION.TOP_RIGHT,
           });
         }
@@ -52,10 +56,10 @@ const ChatPage = () => {
     } else {
       navigate(routes.loginPagePath());
     }
-  }, []);
+  }, [t, navigate, token, dispatch]);
 
   return isLoad ? (
-    <>
+    <div className="d-flex flex-column h-100">
       {token ? (
         <>
           <ModalWindow />
@@ -69,7 +73,7 @@ const ChatPage = () => {
           </div>
         </>
       ) : null}
-    </>
+    </div>
   ) : (
     <LoginPage />
   );

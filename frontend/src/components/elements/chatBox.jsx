@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-expression-statement */
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { animateScroll } from 'react-scroll';

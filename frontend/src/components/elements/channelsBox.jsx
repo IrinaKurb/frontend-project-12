@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-expression-statement */
 import { React } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';

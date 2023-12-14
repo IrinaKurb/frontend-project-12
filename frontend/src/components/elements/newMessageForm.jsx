@@ -29,6 +29,7 @@ const NewMessageForm = () => {
   };
 
   socket.on('connect', () => {
+    console.log('socket connection in newMesgForm');
     setIsDisabled(false);
   });
 

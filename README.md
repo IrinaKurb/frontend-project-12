@@ -18,4 +18,4 @@ Chat is a convenient application for users to communicate with each other via te
 5. Run application
 `make start`
 
-## Project's link:
+## Project's link: https://frontend-project-12-n81m5c0e3-irinakurb.vercel.app/

@@ -10,6 +10,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import require from 'leo-profanity';
 import { toast, ToastContainer } from 'react-toastify';
 import { getChannelsNames, getCurrentChannel } from '../../selectors.js';
 import { closeModalWindow } from '../../store/modalSlice.js';
@@ -37,7 +38,6 @@ const AddNewChannelModal = ({ handleClose }) => {
 
   const [isActiveBtn, setIsActiveBtn] = useState(true);
 
-  // eslint-disable-next-line global-require
   const filter = require('leo-profanity');
 
   const notAddChannel = () => {
@@ -67,7 +67,8 @@ const AddNewChannelModal = ({ handleClose }) => {
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
             socket
-              .timeout(5000)
+              .volatile
+              .timeout(3000)
               .emit(
                 'newChannel',
                 { name: filter.clean(values.name) },
@@ -152,7 +153,8 @@ const RemoveChannelModal = ({ handleClose }) => {
 
   const handleRemove = () => {
     socket
-      .timeout(5000)
+      .volatile
+      .timeout(3000)
       .emit('removeChannel', { id: currentChannel.id }, (error) => {
         if (error) {
           notRemoveChannel();
@@ -219,7 +221,6 @@ const RenameChannelModal = ({ handleClose }) => {
     });
   };
 
-  // eslint-disable-next-line quotes, global-require
   const filter = require('leo-profanity');
 
   useEffect(() => {
@@ -248,7 +249,8 @@ const RenameChannelModal = ({ handleClose }) => {
             setSubmitting(false);
 
             socket
-              .timeout(5000)
+              .volatile
+              .timeout(3000)
               .emit(
                 'renameChannel',
                 { id: values.id, name: filter.clean(values.name) },

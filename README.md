@@ -1,5 +1,6 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/IrinaKurb/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/IrinaKurb/frontend-project-12/actions)
+[![Maintainability](https://api.codeclimate.com/v1/badges/515e11d496e06faee331/maintainability)](https://codeclimate.com/github/IrinaKurb/frontend-project-12/maintainability)
 
 # Project Description:
 
@@ -18,4 +19,6 @@ Chat is a convenient application for users to communicate with each other via te
 5. Run application
 `make start`
 
-## Project's link: https://frontend-project-12-n81m5c0e3-irinakurb.vercel.app/
+## Project's link:
+
+https://frontend-project-12-n81m5c0e3-irinakurb.vercel.app/

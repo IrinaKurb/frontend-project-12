@@ -28,10 +28,11 @@ const ChatPage = () => {
     const requestData = async () => {
       try {
         const response = await axios.get(
-          routes.dataApiPath(), 
-          { 
-            headers: getAuthHeader() 
-          });
+          routes.dataApiPath(),
+          {
+            headers: getAuthHeader(),
+          }
+          );
         if (!didMount) setLoad(true);
         const { data } = response;
         dispatch(addInitialChannel(data));
@@ -50,14 +51,14 @@ const ChatPage = () => {
       }
     };
     requestData();
-    return () => { didMount = true };
+    return () => { didMount = true; };
   }, [t, navigate, dispatch, getAuthHeader]);
 
   return (
     isLoad ? (
       <div className="d-flex flex-column h-100">
-          <ModalWindow />
-          <div className="container h-100 my-4 overflow-hidden rounded shadow">
+        <ModalWindow />
+        <div className="container h-100 my-4 overflow-hidden rounded shadow">
             <div className="row h-100 bg-white flex-md-row">
               <ChannelsBox />
               <div className="col p-0 h-100">

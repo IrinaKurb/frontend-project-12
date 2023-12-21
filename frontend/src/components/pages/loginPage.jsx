@@ -55,8 +55,8 @@ const LoginPage = () => {
                 ) => {
                   axios.post(routes.loginApiPath(), values).then((response) => {
                     logIn(response.data);
-                    const { from } = location.state || 
-                      { from: { pathname: routes.chatPagePath() } };
+                    const { from } = location.state
+                      || { from: { pathname: routes.chatPagePath() } };
                     navigate(from);
                   }).catch((error) => {
                     setIsActiveBtn(false);

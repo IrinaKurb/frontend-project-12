@@ -1,9 +1,9 @@
 import { React } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getCurrentChannelId, getCurrentChannels } from '../../selectors/selectors';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
+import { getCurrentChannelId, getCurrentChannels } from '../../selectors/selectors';
 import { setCurrentChannelId } from '../../slices/channelSlice';
 import { openModalWindow } from '../../slices/modalSlice';
 

@@ -9,9 +9,9 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getCurrentChannelId } from '../../selectors/selectors';
 import require from 'leo-profanity';
 import { toast } from 'react-toastify';
+import { getCurrentChannelId } from '../../selectors/selectors';
 import SocketContext from '../../contexts/socketContext';
 import AuthContext from '../../contexts/tokenContext';
 import 'react-toastify/dist/ReactToastify.css';
@@ -71,7 +71,6 @@ const NewMessageForm = () => {
       <InputGroup>
         <Form.Control
           ref={formikRef}
-          autoFocus={true}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.body}

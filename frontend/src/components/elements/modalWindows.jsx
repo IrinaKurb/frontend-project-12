@@ -12,13 +12,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import require from 'leo-profanity';
 import { toast, ToastContainer } from 'react-toastify';
-import { 
+import {
   getChannelsNames,
   getCurrentChannel,
   getCurrentChannelId,
   getModalType,
-  getOpenedStatus
-  } from '../../selectors/selectors.js';
+  getOpenedStatus,
+} from '../../selectors/selectors.js';
 import { closeModalWindow } from '../../slices/modalSlice.js';
 import {
   setCurrentChannelId,

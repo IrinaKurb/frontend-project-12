@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import initI18next from './init18next.js';
@@ -9,8 +9,8 @@ import LoginPage from './components/pages/loginPage.jsx';
 import ChatPage from './components/pages/chatPage.jsx';
 import RegistrationPage from './components/pages/RegistrationPage.jsx';
 import routes from './routes.js';
-import TokenContext from './contexts/tokenContext.jsx';
-import store from './store/index.js';
+import AuthContext from './contexts/tokenContext.jsx';
+import store from './slices/index.js';
 import Navbar from './components/elements/navigationPannel.jsx';
 import './App.css';
 
@@ -18,16 +18,35 @@ const App = () => {
   initI18next();
   initLeoprofanity();
 
-  const [token, setToken] = useState(null);
+  const AuthProvider = ({ children }) => {
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    const [user, setUser] = useState(currentUser ? { username: currentUser.username } : null);
 
-  const memoState = useMemo(() => {
-    const state = { token, setToken };
-    return state;
-  }, [token, setToken]);
+    const logIn = (userData) => {
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser({ username: userData.username });
+    };
+  
+    const logOut = () => {
+      localStorage.removeItem('user');
+      setUser(null);
+    };
+  
+    const getAuthHeader = () => {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
+    };
+
+    return (
+      <AuthContext.Provider value={{logIn, logOut, getAuthHeader, user}}>
+        { children }
+      </AuthContext.Provider>
+    );
+  };
 
   return (
     <Provider store={store}>
-      <TokenContext.Provider value={memoState}>
+      <AuthProvider>
         <BrowserRouter>
           <div className="d-flex flex-column h-100">
             <Navbar />
@@ -39,7 +58,7 @@ const App = () => {
             </Routes>
           </div>
         </BrowserRouter>
-      </TokenContext.Provider>
+      </AuthProvider>
     </Provider>
   );
 };

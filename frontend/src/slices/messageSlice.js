@@ -27,6 +27,6 @@ const messageSlice = createSlice({
   },
 });
 
-export const { addInitialMessages, addMessage } = messageSlice.actions; // достали action
+export const { addInitialMessages, addMessage } = messageSlice.actions;
 
-export default messageSlice.reducer; // экспорт редьюсеров, которые и должны юыть подключены в стор
+export default messageSlice.reducer;

@@ -1,8 +1,8 @@
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
-import store from './store/index.js';
-import { addMessage } from './store/messageSlice.js';
-import { addChannel, removeChannel, renameChannel } from './store/channelSlice.js';
+import store from './slices/index.js';
+import { addMessage } from './slices/messageSlice.js';
+import { addChannel, removeChannel, renameChannel } from './slices/channelSlice.js';
 
 const { dispatch } = store;
 

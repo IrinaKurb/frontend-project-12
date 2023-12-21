@@ -13,13 +13,13 @@ import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
 import authImg from '../../assets/autImg.png';
 import routes from '../../routes.js';
-import TokenContext from '../../contexts/tokenContext';
+import AuthContext from '../../contexts/tokenContext';
 
 const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const inputRef = useRef();
-  const { setToken } = useContext(TokenContext);
+  const { logIn } = useContext(AuthContext);
   const [isValidForm, setIsValidForm] = useState(true);
   const [isActiveBtn, setIsActiveBtn] = useState(true);
 
@@ -53,11 +53,7 @@ const LoginPage = () => {
                   { setSubmitting },
                 ) => {
                   axios.post(routes.loginApiPath(), values).then((response) => {
-                    const upDateToken = response.data.token;
-                    const userName = response.data.username;
-                    localStorage.setItem('token', JSON.stringify(upDateToken));
-                    localStorage.setItem('userName', JSON.stringify(userName));
-                    setToken(upDateToken);
+                    logIn(response.data);
                     navigate(routes.chatPagePath());
                     setIsActiveBtn(false);
                   }).catch((error) => {

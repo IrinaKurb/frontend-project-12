@@ -24,6 +24,6 @@ const modalsSlice = createSlice({
   },
 });
 
-export const { openModalWindow, closeModalWindow } = modalsSlice.actions; // достали action
+export const { openModalWindow, closeModalWindow } = modalsSlice.actions;
 
-export default modalsSlice.reducer; // экспорт редьюсеров, которые и должны быть подключены в стор
+export default modalsSlice.reducer;

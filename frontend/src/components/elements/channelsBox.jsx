@@ -1,10 +1,11 @@
 import { React } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { getCurrentChannelId, getCurrentChannels } from '../../selectors/selectors';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { setCurrentChannelId } from '../../store/channelSlice';
-import { openModalWindow } from '../../store/modalSlice';
+import { setCurrentChannelId } from '../../slices/channelSlice';
+import { openModalWindow } from '../../slices/modalSlice';
 
 const Channel = ({
   channelName,
@@ -58,7 +59,8 @@ const Channel = ({
 const ChannelsBox = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { channels, currentChannelId } = useSelector((state) => state.channelsStore);
+  const channels = useSelector(getCurrentChannels);
+  const currentChannelId = useSelector(getCurrentChannelId);
 
   const chooseActiveChannel = (id) => () => {
     dispatch(setCurrentChannelId(id));

@@ -15,7 +15,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import routes from '../../routes.js';
 
 import registrationImg from '../../assets/registrationImg.png';
-import TokenContext from '../../contexts/tokenContext.jsx';
+import AuthContext from '../../contexts/tokenContext.jsx';
 
 const RegistrationPage = () => {
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ const RegistrationPage = () => {
   const [isActiveBtn, setIsActiveBtn] = useState(true);
   const inputRef = useRef();
   const navigate = useNavigate();
-  const { setToken } = useContext(TokenContext);
+  const { logIn } = useContext(AuthContext);
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -78,12 +78,9 @@ const RegistrationPage = () => {
                       })
                         .then((response) => {
                           const { data } = response;
-                          const { token, username } = data;
-                          localStorage.setItem('token', JSON.stringify(token));
-                          localStorage.setItem('userName', JSON.stringify(username));
                           setRegistrationFailed(false);
                           setIsActiveBtn(false);
-                          setToken(token);
+                          logIn(data);
                           navigate(routes.chatPagePath());
                         });
                       setIsActiveBtn(true);

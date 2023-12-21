@@ -26,7 +26,7 @@ const channelSlice = createSlice({
     removeChannel(state, action) {
       const defaultChannelId = 1;
       const { id } = action.payload;
-      remove(state.channels, (item) => item.id === id); // обновили channels
+      remove(state.channels, (item) => item.id === id);
       state.currentChannelId = defaultChannelId;
     },
     renameChannel(state, action) {
@@ -45,6 +45,6 @@ export const {
   addChannel,
   removeChannel,
   renameChannel,
-} = channelSlice.actions; // достали action
+} = channelSlice.actions;
 
-export default channelSlice.reducer; // экспорт редьюсеров, которые и должны быть подключены в стор
+export default channelSlice.reducer;

@@ -12,13 +12,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import require from 'leo-profanity';
 import { toast, ToastContainer } from 'react-toastify';
-import { getChannelsNames, getCurrentChannel } from '../../selectors.js';
-import { closeModalWindow } from '../../store/modalSlice.js';
+import { 
+  getChannelsNames,
+  getCurrentChannel,
+  getCurrentChannelId,
+  getModalType,
+  getOpenedStatus
+  } from '../../selectors/selectors.js';
+import { closeModalWindow } from '../../slices/modalSlice.js';
 import {
   setCurrentChannelId,
   removeChannel,
   renameChannel,
-} from '../../store/channelSlice.js';
+} from '../../slices/channelSlice.js';
 import SocketContext from '../../contexts/socketContext';
 
 const validationSchema = (channels) => Yup.object().shape({
@@ -32,7 +38,7 @@ const validationSchema = (channels) => Yup.object().shape({
 
 const AddNewChannelModal = ({ handleClose }) => {
   const dispatch = useDispatch();
-  const channels = useSelector(getChannelsNames);
+  const channelsName = useSelector(getChannelsNames);
   const { t } = useTranslation();
   const socket = useContext(SocketContext);
 
@@ -61,7 +67,7 @@ const AddNewChannelModal = ({ handleClose }) => {
       <Modal.Body>
         <Formik
           initialValues={{ name: '' }}
-          validationSchema={validationSchema(channels)}
+          validationSchema={validationSchema(channelsName)}
           validateOnChange={false}
           validateOnBlur={false}
           onSubmit={(values, { setSubmitting }) => {
@@ -140,7 +146,7 @@ const AddNewChannelModal = ({ handleClose }) => {
 const RemoveChannelModal = ({ handleClose }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { currentChannelId } = useSelector((state) => state.channelsStore);
+  const currentChannelId = useSelector(getCurrentChannelId);
   const currentChannel = useSelector(getCurrentChannel);
   const [isActiveBtn, setIsActiveBtn] = useState(true);
   const socket = useContext(SocketContext);
@@ -208,7 +214,7 @@ const RemoveChannelModal = ({ handleClose }) => {
 
 const RenameChannelModal = ({ handleClose }) => {
   const dispatch = useDispatch();
-  const channels = useSelector(getChannelsNames);
+  const channelsName = useSelector(getChannelsNames);
   const currentChannel = useSelector(getCurrentChannel);
   const [isActiveBtn, setIsActiveBtn] = useState(true);
   const { t } = useTranslation();
@@ -242,7 +248,7 @@ const RenameChannelModal = ({ handleClose }) => {
       <Modal.Body>
         <Formik
           initialValues={{ name: currentChannel.name, id: currentChannel.id }}
-          validationSchema={validationSchema(channels)}
+          validationSchema={validationSchema(channelsName)}
           validateOnChange={false}
           validateOnBlur={false}
           onSubmit={(values, { setSubmitting }) => {
@@ -326,12 +332,12 @@ const mappingForWindowType = {
 
 const ModalWindow = () => {
   const dispatch = useDispatch();
-  const { isOpened } = useSelector((state) => state.modalsWindows);
+  const isOpened = useSelector(getOpenedStatus);
   const handleCloseWindow = () => {
     dispatch(closeModalWindow());
   };
 
-  const { modalType } = useSelector((state) => state.modalsWindows);
+  const modalType = useSelector(getModalType);
   const ModalComponent = mappingForWindowType[modalType];
 
   return (

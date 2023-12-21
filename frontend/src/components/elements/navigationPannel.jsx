@@ -7,7 +7,7 @@ import AuthContext from '../../contexts/tokenContext';
 const Navbar = () => {
   const { t } = useTranslation();
   const { logOut, user } = useContext(AuthContext);
- 
+
   return (
     <div>
       <BootstrapNavbar bg="white" expand="lg" className="shadow-sm">

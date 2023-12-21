@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+
 import { createSlice } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
 
@@ -12,7 +13,7 @@ const channelSlice = createSlice({
   initialState,
   reducers: {
     addInitialChannel(state, action) {
-      const { channels, currentChannelId} = action.payload;
+      const { channels, currentChannelId } = action.payload;
       state.channels = channels;
       state.currentChannelId = currentChannelId;
     },

@@ -27,8 +27,11 @@ const ChatPage = () => {
     let didMount = false; // eslint-disable-line
     const requestData = async () => {
       try {
-        const response = await axios.get(routes.dataApiPath(), 
-          { headers: getAuthHeader() }); 
+        const response = await axios.get(
+          routes.dataApiPath(), 
+          { 
+            headers: getAuthHeader() 
+          });
         if (!didMount) setLoad(true);
         const { data } = response;
         dispatch(addInitialChannel(data));
@@ -53,22 +56,20 @@ const ChatPage = () => {
   return (
     isLoad ? (
       <div className="d-flex flex-column h-100">
-          <>
-            <ModalWindow />
-            <div className="container h-100 my-4 overflow-hidden rounded shadow">
-              <div className="row h-100 bg-white flex-md-row">
-                <ChannelsBox />
-                <div className="col p-0 h-100">
-                  <ChatBox />
-                </div>
+          <ModalWindow />
+          <div className="container h-100 my-4 overflow-hidden rounded shadow">
+            <div className="row h-100 bg-white flex-md-row">
+              <ChannelsBox />
+              <div className="col p-0 h-100">
+                <ChatBox />
               </div>
             </div>
-          </>
+          </div>
       </div>
     ) : (
       null
     )
-  )
+  );
 };
 
 export default ChatPage;

@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -19,6 +19,7 @@ const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const inputRef = useRef();
+  const location = useLocation();
   const { logIn } = useContext(AuthContext);
   const [isValidForm, setIsValidForm] = useState(true);
   const [isActiveBtn, setIsActiveBtn] = useState(true);
@@ -54,9 +55,10 @@ const LoginPage = () => {
                 ) => {
                   axios.post(routes.loginApiPath(), values).then((response) => {
                     logIn(response.data);
-                    navigate(routes.chatPagePath());
-                    setIsActiveBtn(false);
+                    const { from } = location.state || { from: { pathname: routes.chatPagePath() } };
+                    navigate(from);
                   }).catch((error) => {
+                    setIsActiveBtn(false);
                     if (!error.isAxiosError) {
                       toast.error(t('unknownError'));
                       return;
@@ -64,6 +66,7 @@ const LoginPage = () => {
                     if (error.response.status === 401) {
                       setIsValidForm(false);
                       inputRef.current.select();
+                      setIsActiveBtn(true);
                     } else {
                       toast.error(t('networkError'), {
                         position: toast.POSITION.TOP_RIGHT,
@@ -72,7 +75,6 @@ const LoginPage = () => {
                     }
                   });
                   setSubmitting(false);
-                  setIsActiveBtn(true);
                 }}
               >
                 {({

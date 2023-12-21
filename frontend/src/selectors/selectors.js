@@ -1,4 +1,4 @@
-import { createSelector } from "@reduxjs/toolkit";
+import { createSelector } from '@reduxjs/toolkit';
 
 const selectState = (state) => state;
 const selectChannels = (state) => state.channelsStore.channels;
@@ -7,41 +7,39 @@ const selectMessages = (state) => state.messagesStore.messages;
 
 export const getOpenedStatus = createSelector(
   [selectState],
-  (state) => state.modalsWindows.isOpened
+  (state) => state.modalsWindows.isOpened,
 );
 
 export const getModalType = createSelector(
   [selectState],
-  (state) => state.modalsWindows.modalType
+  (state) => state.modalsWindows.modalType,
 );
 
 export const getCurrentChannels = createSelector(
   [selectState],
-  (state) => state.channelsStore.channels
+  (state) => state.channelsStore.channels,
 );
 
 export const getCurrentChannelId = createSelector(
   [selectState],
-  (state) => state.channelsStore.currentChannelId
+  (state) => state.channelsStore.currentChannelId,
 );
 
 export const getCurrentChannel = createSelector(
   [selectChannels, selectCurrentChannelId],
-  (channels, currentChannelId) => {
-    return channels.find((c) => c.id === currentChannelId);
-  }
+  (channels, currentChannelId) => (
+    channels.find((c) => c.id === currentChannelId)),
 );
 
 export const getMessagesForCurrentChannel = createSelector(
   [selectCurrentChannelId, selectMessages],
   (currentChannelId, messages) => {
     const channelMessages = messages.filter(
-      (m) => m.channelId === currentChannelId
-    );
+      (m) => m.channelId === currentChannelId,
+    )
     return channelMessages;
-  }
+  },
 );
 
-export const getChannelsNames = createSelector([selectChannels], (channels) => {
-  return channels.map(({ name }) => name);
-});
+export const getChannelsNames = createSelector([selectChannels], (channels) => 
+  channels.map(({ name }) => name));

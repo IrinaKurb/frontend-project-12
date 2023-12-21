@@ -42,4 +42,5 @@ export const getMessagesForCurrentChannel = createSelector(
 );
 
 export const getChannelsNames = createSelector(
-  [selectChannels], (channels) => channels.map(({ name }) => name));
+  [selectChannels], (channels) => channels.map(({ name }) => name)
+);

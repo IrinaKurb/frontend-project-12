@@ -20,7 +20,7 @@ const ChatPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoad, setLoad] = useState(false);
-  const { getAuthHeader } = useContext(AuthContext);
+  const { getAuthHeader, logOut } = useContext(AuthContext);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,6 +42,7 @@ const ChatPage = () => {
           return;
         }
         if (error.response?.status === 401) {
+          logOut();
           navigate(routes.loginPagePath());
         } else {
           toast.error(t('networkError'), {

@@ -10,7 +10,6 @@ const initSocket = (initI18next) => {
   const socket = io();
 
   const { t } = initI18next;
-  
   socket.on('connect', () => {
     toast.success(t('chatPage.messagesForUser.connected'), {
       position: toast.POSITION.TOP_RIGHT,

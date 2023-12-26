@@ -67,10 +67,10 @@ const AddNewChannelModal = ({ handleClose }) => {
           validationSchema={validationSchema(channelsName)}
           validateOnChange={false}
           validateOnBlur={false}
-          onSubmit={ async (values, { setSubmitting }) => {
+          onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(false);
             const filtredChannelName = {
-              name: filter.clean(values.name)
+              name: filter.clean(values.name),
             };
             try {
               const response = await addChannel(filtredChannelName);
@@ -151,7 +151,7 @@ const RemoveChannelModal = ({ handleClose }) => {
 
   const handleRemove = () => {
     const channelToRemove = { 
-      id: currentChannel.id 
+      id: currentChannel.id,
     };
     try {
       deleteChannel(channelToRemove);
@@ -242,9 +242,9 @@ const RenameChannelModal = ({ handleClose }) => {
           validateOnBlur={false}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
-            const channelToRename = { 
-              id: values.id, 
-              name: filter.clean(values.name) 
+            const channelToRename = {
+              id: values.id,
+              name: filter.clean(values.name),
             };
             try {
               changeNameChannel(channelToRename);

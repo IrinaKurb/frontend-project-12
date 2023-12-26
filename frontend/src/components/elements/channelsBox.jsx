@@ -17,19 +17,19 @@ const Channel = ({
   const isChoosenBtn = isCurrent ? 'secondary' : null;
   const dispatch = useDispatch();
 
-  const chooseActiveChannel = (id) => () => {
-    dispatch(setCurrentChannelId(id));
+  const chooseActiveChannel = (channelId) => () => {
+    dispatch(setCurrentChannelId(channelId));
   };
 
-  const removeChannel = (id) => () => {
+  const removeChannel = (channelId) => () => {
     dispatch(
-      openModalWindow({ modalType: 'removeChannel', managedChannelId: id }),
+      openModalWindow({ modalType: 'removeChannel', managedChannelId: channelId }),
     );
   };
 
-  const renameChannel = (id) => () => {
+  const renameChannel = (channelId) => () => {
     dispatch(
-      openModalWindow({ modalType: 'renameChannel', managedChannelId: id }),
+      openModalWindow({ modalType: 'renameChannel', managedChannelId: channelId }),
     );
   };
 

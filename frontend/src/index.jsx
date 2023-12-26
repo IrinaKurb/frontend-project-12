@@ -19,8 +19,7 @@ const app = async () => {
     addChannel: (channel) => socket.timeout(3000).emitWithAck('newChannel', channel),
     deleteChannel: (channel) => socket.timeout(3000).emitWithAck('removeChannel', channel),
     changeNameChannel: (channel) => socket.timeout(3000).emitWithAck('renameChannel', channel),
-};
-
+  };
 
   root.render(
     <SocketContext.Provider value={socketApi}>

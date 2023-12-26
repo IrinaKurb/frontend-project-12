@@ -150,7 +150,7 @@ const RemoveChannelModal = ({ handleClose }) => {
   };
 
   const handleRemove = () => {
-    const channelToRemove = { 
+    const channelToRemove = {
       id: currentChannel.id,
     };
     try {

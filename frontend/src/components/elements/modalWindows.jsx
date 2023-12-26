@@ -10,7 +10,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import require from 'leo-profanity';
+import filter from 'leo-profanity';
 import { toast, ToastContainer } from 'react-toastify';
 import {
   getChannelsNames,
@@ -40,12 +40,9 @@ const AddNewChannelModal = ({ handleClose }) => {
   const dispatch = useDispatch();
   const channelsName = useSelector(getChannelsNames);
   const { t } = useTranslation();
-  const socket = useContext(SocketContext);
+  const { addChannel } = useContext(SocketContext);
 
   const [isActiveBtn, setIsActiveBtn] = useState(true);
-
-  const filter = require('leo-profanity');
-
   const notAddChannel = () => {
     toast.error(t('networkError'), {
       position: toast.POSITION.TOP_RIGHT,
@@ -70,25 +67,20 @@ const AddNewChannelModal = ({ handleClose }) => {
           validationSchema={validationSchema(channelsName)}
           validateOnChange={false}
           validateOnBlur={false}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={ async (values, { setSubmitting }) => {
             setSubmitting(false);
-            socket
-              .volatile
-              .timeout(3000)
-              .emit(
-                'newChannel',
-                { name: filter.clean(values.name) },
-                (error, response) => {
-                  if (error) {
-                    setIsActiveBtn(false);
-                    notAddChannel();
-                  } else {
-                    const { id } = response.data;
-                    dispatch(setCurrentChannelId(id));
-                    handleClose();
-                  }
-                },
-              );
+            const filtredChannelName = {
+              name: filter.clean(values.name)
+            };
+            try {
+              const response = await addChannel(filtredChannelName);
+              const { id } = response.data;
+              dispatch(setCurrentChannelId(id));
+              handleClose();
+            } catch {
+              setIsActiveBtn(false);
+              notAddChannel();
+            }
           }}
         >
           {({
@@ -149,7 +141,7 @@ const RemoveChannelModal = ({ handleClose }) => {
   const currentChannelId = useSelector(getCurrentChannelId);
   const currentChannel = useSelector(getCurrentChannel);
   const [isActiveBtn, setIsActiveBtn] = useState(true);
-  const socket = useContext(SocketContext);
+  const { deleteChannel } = useContext(SocketContext);
 
   const notRemoveChannel = () => {
     toast.error(t('networkError'), {
@@ -158,18 +150,17 @@ const RemoveChannelModal = ({ handleClose }) => {
   };
 
   const handleRemove = () => {
-    socket
-      .volatile
-      .timeout(3000)
-      .emit('removeChannel', { id: currentChannel.id }, (error) => {
-        if (error) {
-          notRemoveChannel();
-          setIsActiveBtn(false);
-        } else {
-          dispatch(removeChannel({ managedChannelId: currentChannelId }));
-          handleClose();
-        }
-      });
+    const channelToRemove = { 
+      id: currentChannel.id 
+    };
+    try {
+      deleteChannel(channelToRemove);
+      dispatch(removeChannel({ managedChannelId: currentChannelId }));
+      handleClose();
+    } catch {
+      notRemoveChannel();
+      setIsActiveBtn(false);
+    }
   };
 
   return (
@@ -219,15 +210,13 @@ const RenameChannelModal = ({ handleClose }) => {
   const [isActiveBtn, setIsActiveBtn] = useState(true);
   const { t } = useTranslation();
   const inputRef = useRef(null);
-  const socket = useContext(SocketContext);
+  const { changeNameChannel } = useContext(SocketContext);
 
   const notRenameChannel = () => {
     toast.error(t('networkError'), {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
-
-  const filter = require('leo-profanity');
 
   useEffect(() => {
     setTimeout(() => inputRef.current.select());
@@ -253,23 +242,18 @@ const RenameChannelModal = ({ handleClose }) => {
           validateOnBlur={false}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
-
-            socket
-              .volatile
-              .timeout(3000)
-              .emit(
-                'renameChannel',
-                { id: values.id, name: filter.clean(values.name) },
-                (error) => {
-                  if (error) {
-                    setIsActiveBtn(false);
-                    notRenameChannel();
-                  } else {
-                    dispatch(renameChannel(values));
-                    handleClose();
-                  }
-                },
-              );
+            const channelToRename = { 
+              id: values.id, 
+              name: filter.clean(values.name) 
+            };
+            try {
+              changeNameChannel(channelToRename);
+              dispatch(renameChannel(values));
+              handleClose();
+            } catch {
+              setIsActiveBtn(false);
+              notRenameChannel();
+            }
           }}
         >
           {({

@@ -52,7 +52,7 @@ const ChatPage = () => {
     };
     requestData();
     return () => { didMount = true; };
-  }, [t, navigate, dispatch, getAuthHeader]);
+  }, [t, dispatch, getAuthHeader]);
 
   return (
     isLoad ? (

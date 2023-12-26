@@ -11,16 +11,31 @@ const Channel = ({
   channelName,
   isRemovable,
   isCurrent,
-  handleRemove,
-  handleChoose,
-  handleRename,
+  id,
 }) => {
   const { t } = useTranslation();
   const isChoosenBtn = isCurrent ? 'secondary' : null;
+  const dispatch = useDispatch();
+
+  const chooseActiveChannel = (id) => () => {
+    dispatch(setCurrentChannelId(id));
+  };
+
+  const removeChannel = (id) => () => {
+    dispatch(
+      openModalWindow({ modalType: 'removeChannel', managedChannelId: id }),
+    );
+  };
+
+  const renameChannel = (id) => () => {
+    dispatch(
+      openModalWindow({ modalType: 'renameChannel', managedChannelId: id }),
+    );
+  };
 
   return (
     <li className="nav-item w-100">
-      <Dropdown as={ButtonGroup} className="d-flex" onClick={handleChoose}>
+      <Dropdown as={ButtonGroup} className="d-flex" onClick={chooseActiveChannel(id)}>
         <Button
           type="button"
           className="w-100 rounded-0 text-start text-truncate btn"
@@ -42,10 +57,10 @@ const Channel = ({
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item onClick={handleRemove}>
+              <Dropdown.Item onClick={removeChannel(id)}>
                 {t('chatPage.delete')}
               </Dropdown.Item>
-              <Dropdown.Item onClick={handleRename}>
+              <Dropdown.Item onClick={renameChannel(id)}>
                 {t('chatPage.rename')}
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -62,24 +77,8 @@ const ChannelsBox = () => {
   const channels = useSelector(getCurrentChannels);
   const currentChannelId = useSelector(getCurrentChannelId);
 
-  const chooseActiveChannel = (id) => () => {
-    dispatch(setCurrentChannelId(id));
-  };
-
   const addNewChannel = () => {
     dispatch(openModalWindow({ modalType: 'addChannel' }));
-  };
-
-  const removeChannel = (id) => () => {
-    dispatch(
-      openModalWindow({ modalType: 'removeChannel', managedChannelId: id }),
-    );
-  };
-
-  const renameChannel = (id) => () => {
-    dispatch(
-      openModalWindow({ modalType: 'renameChannel', managedChannelId: id }),
-    );
   };
 
   return (
@@ -107,9 +106,6 @@ const ChannelsBox = () => {
             id={channel.id}
             isRemovable={channel.removable}
             isCurrent={channel.id === currentChannelId}
-            handleChoose={chooseActiveChannel(channel.id)}
-            handleRemove={removeChannel(channel.id)}
-            handleRename={renameChannel(channel.id)}
           />
         ))}
       </ul>

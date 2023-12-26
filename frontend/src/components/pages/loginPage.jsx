@@ -51,7 +51,6 @@ const LoginPage = () => {
                 initialValues={{ username: '', password: '' }}
                 onSubmit={(
                   values,
-                  { setSubmitting },
                 ) => {
                   axios.post(routes.loginApiPath(), values).then((response) => {
                     logIn(response.data);
@@ -75,7 +74,6 @@ const LoginPage = () => {
                       setIsValidForm(true);
                     }
                   });
-                  setSubmitting(false);
                 }}
               >
                 {({

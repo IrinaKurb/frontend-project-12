@@ -1,6 +1,5 @@
 import React, {
   useRef,
-  useState,
   useContext,
   useEffect,
 } from 'react';
@@ -9,7 +8,7 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import require from 'leo-profanity';
+import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
 import { getCurrentChannelId } from '../../selectors/selectors';
 import SocketContext from '../../contexts/socketContext';
@@ -18,11 +17,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const NewMessageForm = () => {
   const { t } = useTranslation();
-  const socket = useContext(SocketContext);
+  const { sendMsg } = useContext(SocketContext);
   const { user } = useContext(AuthContext);
   const formikRef = useRef(null);
   const currentChannelId = useSelector(getCurrentChannelId);
-  const [isDisabled, setIsDisabled] = useState(false);
 
   const notSendMessage = () => {
     toast.error(t('chatPage.messagesForUser.messageNotSend'), {
@@ -30,41 +28,30 @@ const NewMessageForm = () => {
     });
   };
 
-  socket.on('connect', () => {
-    setIsDisabled(false);
-  });
-
-  useEffect(() => {
-    formikRef.current.focus();
-  }, [isDisabled, currentChannelId]);
-
   const formik = useFormik({
     initialValues: { body: '' },
-    onSubmit: ({ body }) => {
-      formik.setSubmitting(false);
-      setIsDisabled(true);
-      if (body.length === 0) {
-        setIsDisabled(false);
-        return;
-      }
-      const filter = require('leo-profanity');
+    onSubmit: async ({ body }) => {
+      if (body.length === 0) return;
       const message = {
         body: filter.clean(body),
         channelId: currentChannelId,
         username: user.username,
       };
-      socket.volatile.timeout(3000).emit('newMessage', message, (err) => {
-        if (err) {
-          notSendMessage();
-        } else {
-          setIsDisabled(false);
-          formik.resetForm();
-        }
-      });
+      try {
+        await sendMsg(message);
+        formik.resetForm();
+      } catch {
+        notSendMessage();
+      }
+      formik.setSubmitting(false);
       formikRef.current.focus();
     },
     validateOnBlur: false,
   });
+
+  useEffect(() => {
+    formikRef.current.focus();
+  }, [formik.isSubmitting, currentChannelId]);
 
   return (
     <Form noValidate className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>
@@ -78,9 +65,9 @@ const NewMessageForm = () => {
           className="form-control border-0 p-0 ps-2"
           aria-label={t('chatPage.ariaLabelMsg')}
           placeholder={t('chatPage.inputMessage')}
-          disabled={isDisabled ? 'disabled' : null}
+          disabled={formik.isSubmitting}
         />
-        <Button variant="group-vertical" type="submit" disabled={isDisabled ? 'disabled' : null}>
+        <Button variant="group-vertical" type="submit" disabled={formik.isSubmitting}>
           <ArrowRightSquare size={20} />
           <span className="visually-hidden" />
         </Button>
